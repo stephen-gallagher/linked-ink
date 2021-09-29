@@ -4,37 +4,41 @@ const { Schema, model } = require("mongoose");
 const userSchema = new Schema({
   username: {
     type: String,
-    unique: True
+    unique: true
 },
-  Password : String,
-  ImageURL : String,
+  password: String,
+  FirstName: String,
+  LastName: String,
+  profilePicture: String,
+  tattooStyle: String,
+  favouriteStyles: String,
+  aboutMe: String,
+  tattoos:  
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Collection',
+  },
+
   favouriteArtists: [
       {
-        type: Schema.types.ObjectId,
-        ref: Artist
-      }
-    ],
-  myTattoos: [
-      {
-        imageURL: String,
-        title: String,
-        description: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
       }
     ],
   collections: [
       {
-        type: Schema.types.ObjectId,
-        ref: Collection 
+        type: Schema.Types.ObjectId,
+        ref: 'Collection',
       }
     ],
     myAppointments: [
       {
         date: Date,
-        time: Time,
         Cost: Number,
         location: String,
       }
-    ]
+    ],
+    role: String,
 });
 
 const User = model("User", userSchema);
