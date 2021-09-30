@@ -7,11 +7,16 @@ const userSchema = new Schema({
     unique: true
 },
   password: String,
-  FirstName: String,
-  LastName: String,
+  role: String,
+  firstName: String,
+  lastName: String,
   profilePicture: String,
-  tattooStyle: String,
-  favouriteStyles: String,
+  tattooStyle: [
+    String
+  ],
+  favouriteStyles: [
+    String,
+  ],
   aboutMe: String,
   tattoos:  
     {
@@ -38,7 +43,6 @@ const userSchema = new Schema({
         location: String,
       }
     ],
-    role: String,
 });
 
 const User = model("User", userSchema);

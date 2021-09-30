@@ -30,7 +30,7 @@ router.post('/login', (req, res, next) => {
 
 router.post('/signup', (req, res, next) => {
 	console.log(req.body);
-	const { username, profilePicture } = req.body;
+	const { role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles } = req.body;
 	// validation
 	// is the password 4+ chars
 	if (password.length < 4) {
@@ -45,7 +45,7 @@ router.post('/signup', (req, res, next) => {
 	}
 	// validation passed
 	// we now check if the username already exists
-	Artist.findOne({ username: username })
+	User.findOne({ username: username })
 		.then(userFromDB => {
 			// if user exists 
 			if (userFromDB !== null) {
@@ -58,7 +58,7 @@ router.post('/signup', (req, res, next) => {
 				const hash = bcrypt.hashSync(password, salt);
 				console.log(hash);
 				// we create a document for that user in the db with the hashed 
-				User.create({ username: username, password: hash, firstName: firstName, lastName: lastName, profilePicture: profilePicture, aboutMe: aboutMe })
+				User.create({ role: role, username: username, password: hash, profilePicture: profilePicture, firstName: firstName, lastName: lastName, aboutMe: aboutMe, tattooStyle: tattooStyle, favouriteStyles: favouriteStyles })
 					.then(createdUser => {
 						console.log(createdUser);
 						// log the user in

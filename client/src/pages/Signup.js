@@ -4,6 +4,8 @@ import Switch from 'react-switch'
 import Toggle from '../components/Toggle';
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
+import axios from 'axios';
+import service from '../api/service'
 
 
 export default function Signup(props) {
@@ -16,7 +18,7 @@ export default function Signup(props) {
 	const [tattooStyle, setTattooStyle] = useState('')
 	const [favouriteStyles, setFavouriteStyles] = useState('')
 	const [aboutMe, setAboutMe] = useState('')
-	const [role, setRole] = useState('')
+	const [role, setRole] = useState('Artist')
 
 
 	const [message, setMessage] = useState('');
@@ -24,24 +26,49 @@ export default function Signup(props) {
 
     const handleToggleChange = e => {
 	setToggled(e.target.checked)
+	setRole('User')
 	}
 
-	// const handleTattooStyleChange = e => {
-	// 	// const values = Array.from(e.target.values, option => option.value);
-	// 	setTattooStyle({tattooStyle})
-	// 	console.log(e.target)
-	// }
+	const handleTattooStyleChange = (e) => {
+		const newValuesArr = e ? e.map(item => item.value) : [];
+		console.log('the value', e[0].value)
+		console.log(newValuesArr)
+		// setTattooStyle({value: e.target.value})
+		setTattooStyle(newValuesArr)
+		// console.log()
+	}
 
 	const handleFavouriteStyleChange = e => {
-		// const values = Array.from(e.target.values, option => option.value);
-		console.log(e.target)
+		const newValuesArr = e ? e.map(item => item.value) : [];
+		console.log('the value', e[0].value)
+		console.log(newValuesArr)
+		setFavouriteStyles(newValuesArr)
 	}
 
-	const handleSubmit = e => {
-		e.preventDefault();
-		signup(username, password, profilePicture)
+	const handleFileUpload = (e) => {
+		// const uploadData = new FormData()
+    console.log("The file to be uploaded is: ", e.target.files[0]);
+
+		const uploadData = new FormData();
+
+		uploadData.append("profilePicture", e.target.files[0])
+
+		service
+			.handleUpload(uploadData)
 			.then(response => {
-				console.log(response);
+				console.log('hello', response)
+				setProfilePicture(response.secure_url)
+			})
+			.catch(err => console.log("Error when uploading the file: ", err))
+	};
+	
+
+	const handleSubmitUser = e => {
+		e.preventDefault();
+		
+		signup(role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles)
+			.then(response => {
+				console.log('the response', response);
 				if (response.message) {
 					// reset the form 
                     setUsername('');
@@ -53,7 +80,31 @@ export default function Signup(props) {
                     // add the user to the state of App.js
                     props.setUser(response)
                     // redirect to the projects overview
-                    props.history.push('/projects')
+                    props.history.push('/us')
+                }
+			})
+			.catch(err => console.log(err));
+        
+	}
+
+	const handleSubmitArtist = e => {
+		e.preventDefault();
+		
+		signup(role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles)
+			.then(response => {
+				console.log('the response', response);
+				if (response.message) {
+					// reset the form 
+                    setUsername('');
+                    setPassword('');
+					// set the message
+					setMessage(response.message);
+				} else {
+                    // user is correctly signed up in the backend
+                    // add the user to the state of App.js
+                    props.setUser(response)
+                    // redirect to the projects overview
+                    props.history.push('/us')
                 }
 			})
 			.catch(err => console.log(err));
@@ -92,7 +143,7 @@ export default function Signup(props) {
 			{toggled ? 
 			<div className="signupForm">
 				<h2>User sign up</h2>
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={handleSubmitUser}>
 					<label htmlFor="username">Username: </label>
 					<input
 						type="text"
@@ -111,17 +162,18 @@ export default function Signup(props) {
 					<input 
 						type="file"
 						name="profilePicture"
-						value={profilePicture}
-						onChange={e => setProfilePicture(e.target.value)}
+						onChange={handleFileUpload}
 						/>
-					{/* <label htmlFor="favouriteStyles">Favourite tattoo styles: </label>
+						{profilePicture && <img src={profilePicture} alt="" style={{ height: '200px' }} />}
+					<label htmlFor="favouriteStyles">Favourite tattoo styles: </label>
 					<Select 
+					name="favouriteStyles"
 					components={animatedComponents}
 					isMulti
 					options={tattooStyles} 
-					value={tattooStyles}
+					// value={tattooStyles}
 					onChange={handleFavouriteStyleChange}
-					/> */}
+					/>
 					<button type="submit">Sign Up ✍️</button>
 					{message && (
 					<h3>{message}</h3>
@@ -131,7 +183,7 @@ export default function Signup(props) {
 			:
 			<div className="signupForm">
 				<h2>Artist sign up</h2>
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={handleSubmitArtist}>
 					<label htmlFor="username">Username: </label>
 					<input
 						type="text"
@@ -150,9 +202,9 @@ export default function Signup(props) {
 					<input 
 						type="file"
 						name="profilePicture"
-						value={profilePicture}
-						onChange={e => setProfilePicture(e.target.value)}
+						onChange={handleFileUpload}
 						/>
+						 {profilePicture && <img src={profilePicture} alt="" style={{ height: '200px' }} />}
 					<label htmlFor="firstName">First Name: </label>
 					<input
 						type="text"
@@ -167,14 +219,14 @@ export default function Signup(props) {
 						value={lastName}
 						onChange={e => setLastName(e.target.value)}
 					/>
-					{/* <label htmlFor="tattooStyle">Tattoo style: </label>
+					<label htmlFor="tattooStyle">Tattoo style: </label>
 					<Select 
+					name="tattooStyle"
 					components={animatedComponents}
 					isMulti
 					options={tattooStyles} 
-					value={tattooStyle}
-					onChange={e => }
-					/> */}
+					onChange={handleTattooStyleChange}
+					/>
 					<label htmlFor="aboutMe">About Me: </label>
 					<input
 					type="text"
@@ -192,26 +244,7 @@ export default function Signup(props) {
 
 
 
-			{/* <form onSubmit={handleSubmit}>
-				<label htmlFor="username">Username: </label>
-				<input
-					type="text"
-					name="username"
-					value={username}
-					onChange={e => setUsername(e.target.value)}
-				/>
-				<label htmlFor="password">Password: </label>
-				<input
-					type="password"
-					name="password"
-					value={password}
-					onChange={e => setPassword(e.target.value)}
-				/>
-				<button type="submit">Sign Up ✍️</button>
-				{message && (
-					<h3>{message}</h3>
-				)}
-			</form> */}
+
 		</div>
 	)
 }

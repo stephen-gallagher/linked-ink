@@ -12,10 +12,9 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'tattoo-uploads',
-    allowed_formats: 'jpg, jpeg, png',
+    allowed_formats: 'jpg, png',
   },
 });
 
-const uploader = multer({ storage });
+module.exports = multer({ storage });
 
-module.exports = { uploader, cloudinary };
