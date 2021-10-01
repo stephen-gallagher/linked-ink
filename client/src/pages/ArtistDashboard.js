@@ -2,6 +2,7 @@ import React from 'react'
 import service from '../api/service'
 import { useState } from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 
 
@@ -11,8 +12,6 @@ console.log('the props', props)
     const [imageURL, setImageURL] = useState('')
     const [caption, setCaption] = useState('')
     const [tags, setTags] = useState('')
-
-    // const [publicImages, setPublicImages] = []
 
 
     const handleTagChange = e => {
@@ -27,7 +26,7 @@ console.log('the props', props)
 
 		const uploadData = new FormData();
 
-		uploadData.append("profilePicture", e.target.files[0])
+		uploadData.append("imageURL", e.target.files[0])
 
 		service
 			.handleUpload(uploadData)
@@ -41,10 +40,10 @@ console.log('the props', props)
     const handleSubmit = e => {
         e.preventDefault();
         service
-        .saveNewTattoo(imageURL, caption, tags)
+        .saveNewTattoo(imageURL, caption, tags )
         .then (response => {
-            console.log(response.data)
-            // setImageURL(response.imageURL)
+            console.log('great response', response)
+            setImageURL(response.imageURL)
         })
         .catch(err => console.log(err))
         axios.post('/api/crud/tattoos/create', {imageURL, caption, tags})
@@ -59,7 +58,9 @@ console.log('the props', props)
 
     return (
         <div>
-            <h1>Welcome to she show {props.user.firstName}</h1>
+            <h1>Welcome to your dashboard {props.user.firstName}</h1>
+            <img src={props.user.profilePicture} alt="profile"/>
+            <div class='tattooUploadForm'>
             <form onSubmit={handleSubmit}>
             <label htmlFor="image">Upload your work: </label>
 					<input 
@@ -83,6 +84,9 @@ console.log('the props', props)
 					/>
                      <button type="submit">Add Photo</button>
                         </form>
+                        </div>
+
+            <Link to={`/${props.user._id}/artist-profile`}> To your profile </Link>
         </div>
     )
 }

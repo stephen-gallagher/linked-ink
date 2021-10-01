@@ -5,7 +5,7 @@ title: String,
 description: String,
 tattoos:[
     {
-        imageURL: String,
+        image: String,
         // artist: 
         // {
         //         type: Schema.types.ObjectId,

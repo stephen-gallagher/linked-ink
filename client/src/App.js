@@ -9,6 +9,7 @@ import Login from './pages/Login'
 import UserDashboard from './pages/UserDashboard'
 import ArtistDashboard from './pages/ArtistDashboard'
 import ProtectedRoute from './components/ProtectedRoute';
+import ArtistProfile from './pages/ArtistProfile';
 
 
 function App(props) {
@@ -28,9 +29,12 @@ function App(props) {
 
   return (
     <div className="App">
-      <Navbar />
+      <Navbar user={user} setUser={addUser}/>
       <Switch>
-        <Route exact path="/" component={Homepage}/>
+        <Route 
+        exact path="/" 
+        render={props => <Homepage {...props} /> }
+        />
         <Route 
           exact path="/signup" 
           render={props => <Signup setUser={addUser} {...props} />}
@@ -47,6 +51,10 @@ function App(props) {
         exact path="/:id/artist-dashboard" 
         user={user}
         component={ArtistDashboard}/>
+        <ProtectedRoute 
+        exact path="/:id/artist-profile" 
+        user={user}
+        component={ArtistProfile}/>
       </Switch>
     </div>
   );

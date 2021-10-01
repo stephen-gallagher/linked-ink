@@ -52,7 +52,7 @@ export default function Signup(props) {
 
 		const uploadData = new FormData();
 
-		uploadData.append("profilePicture", e.target.files[0])
+		uploadData.append("imageURL", e.target.files[0])
 
 		service
 			.handleUpload(uploadData)
@@ -79,7 +79,7 @@ export default function Signup(props) {
                     // add the user to the state of App.js
                     props.setUser(response)
                     // redirect to the projects overview
-                    props.history.push('/user/dashboard')
+                    props.history.push(`/${response._id}/user-dashboard`)
                 }
 			})
 			.catch(err => console.log(err));
@@ -92,6 +92,7 @@ export default function Signup(props) {
 		
 		signup(role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles)
 			.then(response => {
+				console.log('the response', response)
 				if (response.message) {
 					// reset the form 
                     setUsername('');
@@ -103,7 +104,7 @@ export default function Signup(props) {
                     // add the user to the state of App.js
                     props.setUser(response)
                     // redirect to the projects overview
-                    props.history.push('/artist/dashboard')
+                    props.history.push(`/${response._id}/artist-dashboard`)
                 }
 			})
 			.catch(err => console.log(err));

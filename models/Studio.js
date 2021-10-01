@@ -6,7 +6,7 @@ location: String,
 description: String,
 artists:  {
     type: Schema.types.ObjectId,
-    ref: User,
+    ref: 'User',
     },
 })
 

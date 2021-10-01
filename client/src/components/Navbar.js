@@ -1,7 +1,16 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import {logout} from '../services/auth'
 
-export default function Navbar() {
+export default function Navbar(props) {
+
+    const handleLogout = () => {
+		logout().then(() => {
+			props.setUser(null);
+		})
+	}
+
+
     return (
         <nav>
             <>
@@ -20,6 +29,11 @@ export default function Navbar() {
                     <Link to="/login">
                     Login
                     </Link>
+                </li>
+                <li>
+                    <Link to="/" onClick={() => handleLogout()}>
+						Logout
+					</Link>
                 </li>
                 <li>
                     <Link to="/artists">
