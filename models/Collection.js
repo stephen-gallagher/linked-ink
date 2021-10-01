@@ -6,11 +6,11 @@ description: String,
 tattoos:[
     {
         imageURL: String,
-        artist: 
-        {
-                type: Schema.types.ObjectId,
-                ref: Artist,
-        },
+        // artist: 
+        // {
+        //         type: Schema.types.ObjectId,
+        //         ref: User,
+        // },
         tags: [
             String,
         ],

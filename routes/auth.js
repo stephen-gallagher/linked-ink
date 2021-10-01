@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const User = require('../models/User');
-const Artist = require('../models/Artist')
 const bcrypt = require('bcrypt');
 
 router.post('/login', (req, res, next) => {

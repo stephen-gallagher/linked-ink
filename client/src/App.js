@@ -22,9 +22,9 @@ function App(props) {
   console.log('user: ',user)
   console.log('artist: ', artist)
 
-  const addArtist = artist => {
-    setArtist(artist)
-  }
+  // const addArtist = artist => {
+  //   setArtist(artist)
+  // }
 
   return (
     <div className="App">
@@ -40,11 +40,11 @@ function App(props) {
           render={props => <Login setUser={addUser} {...props} />}
         />
         <ProtectedRoute 
-        exact path="/user/dashboard" 
+        exact path="/:id/user-dashboard" 
         user={user}
         component={UserDashboard}/>
          <ProtectedRoute 
-        exact path="/artist/dashboard" 
+        exact path="/:id/artist-dashboard" 
         user={user}
         component={ArtistDashboard}/>
       </Switch>

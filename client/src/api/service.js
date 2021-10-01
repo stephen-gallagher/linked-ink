@@ -27,4 +27,5 @@ const saveNewTattoo = (newTattoo) => {
 export default {
   service,
   handleUpload,
+  saveNewTattoo
 };

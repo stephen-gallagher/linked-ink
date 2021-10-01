@@ -1,6 +1,8 @@
 import React from 'react'
 import service from '../api/service'
 import { useState } from 'react'
+import axios from 'axios'
+
 
 
 export default function ArtistDashboard(props) {
@@ -10,7 +12,7 @@ console.log('the props', props)
     const [caption, setCaption] = useState('')
     const [tags, setTags] = useState('')
 
-    const [publicImages, setPublicImages] = []
+    // const [publicImages, setPublicImages] = []
 
 
     const handleTagChange = e => {
@@ -38,43 +40,22 @@ console.log('the props', props)
 
     const handleSubmit = e => {
         e.preventDefault();
-        console.log('collection data', props.user.collections)
-        props.user.artistCollecton.push(
-                {
-                title: 'Tattoo Artist Album',
-                images: [
-                    {
-                      imageURL: imageURL,
-                      caption: caption,
-                      tags: tags
-                    }
-                  ]
-                }
-        )
-        // .then(response => {
-        //     if (response.message) {
-        //         // reset the form 
-        //         setImage('');
-        //         setCaption('');
-        //         setTags('');
-        //         // set the message
-        //     } else {
-        //         // user is correctly signed up in the backend
-        //         // add the user to the state of App.js
-        //         // props.setUser(response)
-        //         // redirect to the projects overview
-        //         props.history.push('/artist/dashboard')
-        //     }
-        // })
-        // .catch(err => console.log(err));
-        // service
-        //   .saveNewTattoo({ images, caption, tags })
-        //   .then(res => {
-        //     console.log("added new movie: ", res);
-        //     // here you would redirect to some other page
-        //   })
-        //   .catch(err => console.log("Error while adding the new movie: ", err));
-      };
+        service
+        .saveNewTattoo(imageURL, caption, tags)
+        .then (response => {
+            console.log(response.data)
+            // setImageURL(response.imageURL)
+        })
+        .catch(err => console.log(err))
+        axios.post('/api/crud/tattoos/create', {imageURL, caption, tags})
+        .then(response => {
+			return response.data;
+		})
+		.catch(err => {
+			return err.response.data;
+		});
+    }
+        
 
     return (
         <div>
@@ -86,7 +67,7 @@ console.log('the props', props)
 						name="profilePicture"
 						onChange={handleFileUpload}
 						/>
-                    <label htmlFor="caption">Username: </label>
+                    <label htmlFor="caption">Caption: </label>
 					<input
 						type="text"
 						name="caption"

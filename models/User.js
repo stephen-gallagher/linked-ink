@@ -5,7 +5,7 @@ const userSchema = new Schema({
   username: {
     type: String,
     unique: true
-},
+  },
   password: String,
   role: String,
   firstName: String,
@@ -18,34 +18,17 @@ const userSchema = new Schema({
     String,
   ],
   aboutMe: String,
-  tattoos:  
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Collection',
-  },
 
-  favouriteArtists: [
+  // favouriteArtists: [
+  //     {
+  //       type: Schema.Types.ObjectId,
+  //       ref: 'User',
+  //     }
+  //   ],
+  artistCollection: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'User',
-      }
-    ],
-    artistCollection: [
-      {
-      title: 'Artist Collection',
-      images: [
-          {
-            imageURL: String,
-            captions: String,
-            tags: [String],
-          }
-        ]
-      }
-    ],
-  collections: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Collection',
+        ref: 'Tattoo',
       }
     ],
     myAppointments: [

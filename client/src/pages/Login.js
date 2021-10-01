@@ -13,7 +13,7 @@ export default function Login(props) {
 
 		login(username, password)
 			.then(response => {
-				console.log('hey', response.role);
+				console.log('hey', response);
 				if (response.message) {
 					// reset the form 
 					setUsername('');
@@ -26,9 +26,9 @@ export default function Login(props) {
 					props.setUser(response);
 					// redirect to the projects overview
                     if(response.role === 'User'){
-					props.history.push('/user/dashboard');
+					props.history.push('/:id/user-dashboard');
                     } else if(response.role === 'Artist'){
-                        props.history.push('/artist/dashboard')
+                        props.history.push(`/${response._id}/artist-dashboard`)
 				}
             }
 			})
