@@ -30,6 +30,18 @@ const userSchema = new Schema({
         ref: 'User',
       }
     ],
+    artistCollection: [
+      {
+      title: 'Artist Collection',
+      images: [
+          {
+            imageURL: String,
+            captions: String,
+            tags: [String],
+          }
+        ]
+      }
+    ],
   collections: [
       {
         type: Schema.Types.ObjectId,

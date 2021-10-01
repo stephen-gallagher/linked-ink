@@ -30,7 +30,7 @@ router.post('/login', (req, res, next) => {
 
 router.post('/signup', (req, res, next) => {
 	console.log(req.body);
-	const { role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles } = req.body;
+	const { role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles, collections } = req.body;
 	// validation
 	// is the password 4+ chars
 	if (password.length < 4) {
@@ -58,7 +58,7 @@ router.post('/signup', (req, res, next) => {
 				const hash = bcrypt.hashSync(password, salt);
 				console.log(hash);
 				// we create a document for that user in the db with the hashed 
-				User.create({ role: role, username: username, password: hash, profilePicture: profilePicture, firstName: firstName, lastName: lastName, aboutMe: aboutMe, tattooStyle: tattooStyle, favouriteStyles: favouriteStyles })
+				User.create({ role: role, username: username, password: hash, profilePicture: profilePicture, firstName: firstName, lastName: lastName, aboutMe: aboutMe, tattooStyle: tattooStyle, favouriteStyles: favouriteStyles, collections: collections })
 					.then(createdUser => {
 						console.log(createdUser);
 						// log the user in
@@ -68,6 +68,9 @@ router.post('/signup', (req, res, next) => {
 					.catch(err => {
 						next(err);
 					})
+                    .catch(err => {
+                        console.log(err);
+                    })
 			}
 		})
 });

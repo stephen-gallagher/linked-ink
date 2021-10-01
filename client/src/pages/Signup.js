@@ -19,6 +19,11 @@ export default function Signup(props) {
 	const [favouriteStyles, setFavouriteStyles] = useState('')
 	const [aboutMe, setAboutMe] = useState('')
 	const [role, setRole] = useState('Artist')
+	const [collections, setCollections] = useState('')
+
+	const [title, setTitle] = useState('')
+	const [description, setDescription] = useState('')
+	const [tattoos, setTattoos] = useState('')
 
 
 	const [message, setMessage] = useState('');
@@ -31,8 +36,6 @@ export default function Signup(props) {
 
 	const handleTattooStyleChange = (e) => {
 		const newValuesArr = e ? e.map(item => item.value) : [];
-		console.log('the value', e[0].value)
-		console.log(newValuesArr)
 		// setTattooStyle({value: e.target.value})
 		setTattooStyle(newValuesArr)
 		// console.log()
@@ -40,8 +43,6 @@ export default function Signup(props) {
 
 	const handleFavouriteStyleChange = e => {
 		const newValuesArr = e ? e.map(item => item.value) : [];
-		console.log('the value', e[0].value)
-		console.log(newValuesArr)
 		setFavouriteStyles(newValuesArr)
 	}
 
@@ -56,7 +57,6 @@ export default function Signup(props) {
 		service
 			.handleUpload(uploadData)
 			.then(response => {
-				console.log('hello', response)
 				setProfilePicture(response.secure_url)
 			})
 			.catch(err => console.log("Error when uploading the file: ", err))
@@ -66,9 +66,8 @@ export default function Signup(props) {
 	const handleSubmitUser = e => {
 		e.preventDefault();
 		
-		signup(role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles)
+		signup(role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles, collections)
 			.then(response => {
-				console.log('the response', response);
 				if (response.message) {
 					// reset the form 
                     setUsername('');
@@ -80,11 +79,12 @@ export default function Signup(props) {
                     // add the user to the state of App.js
                     props.setUser(response)
                     // redirect to the projects overview
-                    props.history.push('/us')
+                    props.history.push('/user/dashboard')
                 }
 			})
 			.catch(err => console.log(err));
         
+
 	}
 
 	const handleSubmitArtist = e => {
@@ -92,7 +92,6 @@ export default function Signup(props) {
 		
 		signup(role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles)
 			.then(response => {
-				console.log('the response', response);
 				if (response.message) {
 					// reset the form 
                     setUsername('');
@@ -104,7 +103,7 @@ export default function Signup(props) {
                     // add the user to the state of App.js
                     props.setUser(response)
                     // redirect to the projects overview
-                    props.history.push('/us')
+                    props.history.push('/artist/dashboard')
                 }
 			})
 			.catch(err => console.log(err));

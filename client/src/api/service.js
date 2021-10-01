@@ -17,6 +17,12 @@ const handleUpload = (file) => {
     .catch(errorHandler);
 };
 
+const saveNewTattoo = (newTattoo) => {
+    return service
+      .post("/crud/tattoos/create", newTattoo)
+      .then((res) => res.data)
+      .catch(errorHandler);
+  };
 
 export default {
   service,

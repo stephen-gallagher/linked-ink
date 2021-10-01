@@ -5,7 +5,11 @@ import Homepage from './pages/Homepage';
 import {useState} from 'react'
 import {Switch, Route} from 'react-router-dom';
 import Signup from './pages/Signup';
+import Login from './pages/Login'
 import UserDashboard from './pages/UserDashboard'
+import ArtistDashboard from './pages/ArtistDashboard'
+import ProtectedRoute from './components/ProtectedRoute';
+
 
 function App(props) {
 
@@ -31,7 +35,18 @@ function App(props) {
           exact path="/signup" 
           render={props => <Signup setUser={addUser} {...props} />}
           />
-        <Route exact path="/user/dashboard" component={UserDashboard} props={user}/>
+        <Route
+          exact path="/login"
+          render={props => <Login setUser={addUser} {...props} />}
+        />
+        <ProtectedRoute 
+        exact path="/user/dashboard" 
+        user={user}
+        component={UserDashboard}/>
+         <ProtectedRoute 
+        exact path="/artist/dashboard" 
+        user={user}
+        component={ArtistDashboard}/>
       </Switch>
     </div>
   );

@@ -11,6 +11,9 @@ tattoos:[
                 type: Schema.types.ObjectId,
                 ref: Artist,
         },
+        tags: [
+            String,
+        ],
         caption: String,
         location: String,
     }
