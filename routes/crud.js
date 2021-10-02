@@ -47,7 +47,7 @@ if(req.session.user){
 });
 
 
-
+// all tattoos
 router.get('/', (req, res, next) => {
     Tattoo.find()
       .then((tattoosFromDB) => {
@@ -60,14 +60,26 @@ router.get('/', (req, res, next) => {
   });
 
 
+//   all artists
+router.get('/all-artists', (req, res, next) => {
+    User.find({role: 'Artist'})
+      .then((artistsFromDB) => {
+        // const loggedInUser = req.user;
+        res.status(200).json(artistsFromDB);
+      })
+      .catch((err) => {
+        next(err);
+      });
+  });
+
+
+// Artist tatooo's
 router.get('/:id/artist-profile', (req,res,next) => {
-    User.findById(req.params.id)
-    .then(userFromDB => {
-        console.log('userFromDB', userFromDB)
-        Tattoo.findById(userFromDB.artistCollection)
-        .then(tattoosFromCollection => {
-            console.log('theTattoos', tattoosFromCollection)
-        })
+    Tattoo.find({artist: req.session.user._id})
+    .then(tattoos => {
+        console.log('thetats', tattoos)
+        res.status(200).json(tattoos)
+     
     })
     .catch(err => next(err))
 })
@@ -75,5 +87,3 @@ router.get('/:id/artist-profile', (req,res,next) => {
 
   module.exports = router;
 
-
-//   Tattoo.find

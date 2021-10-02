@@ -10,6 +10,8 @@ import UserDashboard from './pages/UserDashboard'
 import ArtistDashboard from './pages/ArtistDashboard'
 import ProtectedRoute from './components/ProtectedRoute';
 import ArtistProfile from './pages/ArtistProfile';
+import Footer from './components/Footer';
+import AllArtists from './pages/AllArtists';
 
 
 function App(props) {
@@ -28,12 +30,13 @@ function App(props) {
   // }
 
   return (
-    <div className="App">
+    <div className="App d-flex flex-column vh-100">
       <Navbar user={user} setUser={addUser}/>
+      
       <Switch>
         <Route 
         exact path="/" 
-        render={props => <Homepage {...props} /> }
+        render={props => <Homepage setUser={addUser} {...props} user={user}/> }
         />
         <Route 
           exact path="/signup" 
@@ -54,8 +57,15 @@ function App(props) {
         <ProtectedRoute 
         exact path="/:id/artist-profile" 
         user={user}
-        component={ArtistProfile}/>
+        component={ArtistProfile}
+        // render={props => <ArtistProfile setUser={addUser} {...props} user={user}/>}
+        />
+        <Route 
+        exact path="/all-artists" 
+        render={props => <AllArtists setUser={addUser} {...props} user={user}/> }
+        />
       </Switch>
+      <Footer/>
     </div>
   );
 }

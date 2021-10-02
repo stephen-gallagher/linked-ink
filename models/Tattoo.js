@@ -2,10 +2,10 @@ const { Schema, model } = require("mongoose");
 
 const tattooSchema = new Schema({
 imageURL: String,
-artist:  {
+artist: {
     type: Schema.Types.ObjectId,
-     ref: 'User'
-        },
+    ref: "User",
+  },
 tags: [
         String,
         ],

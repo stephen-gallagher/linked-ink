@@ -1,7 +1,28 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import {useState, useEffect} from 'react'
+import axios from 'axios'
 
 export default function Homepage(props) {
+
+    const API_URL = 'http://localhost:5005'
+
+    const [tattoos, setTattoos] = useState([])
+
+    const getAllTattoos = () => {
+		// get request to the server
+		axios.get(`${API_URL}/api/crud`)
+			.then(response => {
+				console.log(response.data)
+				setTattoos(response.data);
+			})
+			.catch(err => console.log(err));
+	}
+
+	useEffect(() => { 
+		getAllTattoos();
+	}, [])
+
     console.log(props)
     return (
         <div>
@@ -13,6 +34,9 @@ export default function Homepage(props) {
                 <div>
                     <Link to="/signup">Sign up</Link>
                 </div>
+                {tattoos.map(tattoo => {
+                    return <img src={tattoo.imageURL} style={{height: "300px"}}></img>
+                })}
             </div>
         </div>
     )

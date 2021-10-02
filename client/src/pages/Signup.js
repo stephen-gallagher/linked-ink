@@ -136,109 +136,173 @@ export default function Signup(props) {
 
 	return (
 		<div className="signupPage">
-			<h3>Create a user account</h3>
-			<div>
+			<h3>I am...</h3>
+			<div className="d-flex justify-content-center">
+				<h4>A tattoo artist</h4>
 				<Toggle onChange={handleToggleChange} />
+				<h4>Looking for a tattoo</h4>
 			</div>
 			{toggled ? 
-			<div className="signupForm">
-				<h2>User sign up</h2>
+			<div className="container d-flex justify-content-center align-items-center mt-5 mb-5">
+				<div className="row">
+					<h1 className="text-center">Create a user account</h1>
+					<div className="col-md-6 offset-md-3 col-xl-6 offset-xl-3">
+						<div className="card shadow">
+							<img src="/tattoo-images/tattoo-group-1.jpeg" alt="tattoo-girl"className="card-img-top"></img>
+							<div className="card-body">
+								<h5 className="card-title">Enter your details here</h5>
 				<form onSubmit={handleSubmitUser}>
-					<label htmlFor="username">Username: </label>
-					<input
-						type="text"
-						name="username"
-						value={username}
-						onChange={e => setUsername(e.target.value)}
-					/>
-					<label htmlFor="password">Create password: </label>
-					<input
-						type="password"
-						name="password"
-						value={password}
-						onChange={e => setPassword(e.target.value)}
-					/>
-					<label htmlFor="profilePicture">Profile picture: </label>
-					<input 
-						type="file"
-						name="profilePicture"
-						onChange={handleFileUpload}
+					<div className="mb-3">
+						<label className="form-label" htmlFor="username">Username: </label>
+						<input
+							className="form-control"
+							type="text"
+							name="username"
+							value={username}
+							required
+							autoFocus
+							onChange={e => setUsername(e.target.value)}
 						/>
-						{profilePicture && <img src={profilePicture} alt="" style={{ height: '200px' }} />}
-					<label htmlFor="favouriteStyles">Favourite tattoo styles: </label>
-					<Select 
-					name="favouriteStyles"
-					components={animatedComponents}
-					isMulti
-					options={tattooStyles} 
-					// value={tattooStyles}
-					onChange={handleFavouriteStyleChange}
-					/>
-					<button type="submit">Sign Up ✍️</button>
+					</div>
+
+					<div className="mb-3">
+						<label className="form-label" htmlFor="password">Create password: </label>
+						<input
+							className="form-control"
+							type="password"
+							name="password"
+							value={password}
+							required
+							onChange={e => setPassword(e.target.value)}
+						/>
+						<div className="valid-feedback">
+						Looks good!
+						</div>
+					</div>
+					<div className="mb-3">
+						<label className="form-label" htmlFor="profilePicture">Profile picture: </label>
+						<input 
+							className="form-control"
+							type="file"
+							name="profilePicture"
+							onChange={handleFileUpload}
+							/>
+							{profilePicture && <img src={profilePicture} alt="" style={{ height: '200px' }} />}
+					</div>
+					<div className="mb-3">
+						<label className="form-label" htmlFor="favouriteStyles">Favourite tattoo styles: </label>
+						<Select 
+						name="favouriteStyles"
+						components={animatedComponents}
+						isMulti
+						options={tattooStyles} 
+						onChange={handleFavouriteStyleChange}
+						/>
+					</div>
+					<div className="mb-3">
+						<button className="btn btn-success btn-block col-12" type="submit">Sign Up ✍️</button>
+					</div>
 					{message && (
 					<h3>{message}</h3>
 				)}
 				</form>
+				</div>
+				</div>
+				</div>
+				</div>
 			</div>
 			:
-			<div className="signupForm">
-				<h2>Artist sign up</h2>
+			<div className="container d-flex justify-content-center align-items-center mt-5 mb-5">
+				<div className="row">
+					<h1 className="text-center">Create an artist account</h1>
+					<div className="col-md-6 offset-md-3 col-xl-6 offset-xl-3">
+					<div className="card shadow">
+							<img src="/tattoo-images/tattoo-artist-1.jpeg" alt="tattoo-girl"className="card-img-top"></img>
+							<div className="card-body">
+								<h5 className="card-title">Enter your details here</h5>
 				<form onSubmit={handleSubmitArtist}>
-					<label htmlFor="username">Username: </label>
-					<input
-						type="text"
-						name="username"
-						value={username}
-						onChange={e => setUsername(e.target.value)}
-					/>
-					<label htmlFor="password">Create password: </label>
-					<input
-						type="password"
-						name="password"
-						value={password}
-						onChange={e => setPassword(e.target.value)}
-					/>
-					<label htmlFor="profilePicture">Profile picture: </label>
-					<input 
-						type="file"
-						name="profilePicture"
-						onChange={handleFileUpload}
+					<div className="mb-3">
+						<label className="form-label" htmlFor="username">Username: </label>
+						<input
+							className="form-control"
+							type="text"
+							name="username"
+							value={username}
+							onChange={e => setUsername(e.target.value)}
 						/>
-						 {profilePicture && <img src={profilePicture} alt="" style={{ height: '200px' }} />}
-					<label htmlFor="firstName">First Name: </label>
-					<input
+					</div>
+					<div className="mb-3">
+						<label className="form-label" htmlFor="password">Create password: </label>
+						<input
+							className="form-control"
+							type="password"
+							name="password"
+							value={password}
+							onChange={e => setPassword(e.target.value)}
+						/>
+					</div>
+					<div className="mb-3">
+						<label className="form-label" htmlFor="profilePicture">Profile picture: </label>
+						<input 
+							className="form-control"
+							type="file"
+							name="profilePicture"
+							onChange={handleFileUpload}
+							/>
+							{profilePicture && <img src={profilePicture} alt="" style={{ height: '200px' }} />}
+					</div>
+					<div className="mb-3">
+						<label className="form-label" htmlFor="firstName">First Name: </label>
+						<input
+							className="form-control"
+							type="text"
+							name="firstName"
+							value={firstName}
+							onChange={e => setFirstName(e.target.value)}
+						/>
+					</div>
+					<div className="mb-3">
+						<label className="form-label" htmlFor="lastName">Last Name: </label>
+						<input
+							className="form-control"
+							type="text"
+							name="lastName"
+							value={lastName}
+							onChange={e => setLastName(e.target.value)}
+						/>
+					</div>
+					<div className="mb-3">
+						<label className="form-label" htmlFor="tattooStyle">Tattoo style: </label>
+						<Select 
+						name="tattooStyle"
+						components={animatedComponents}
+						isMulti
+						options={tattooStyles} 
+						onChange={handleTattooStyleChange}
+						/>
+					</div>
+					<div className="mb-3">
+						<label className="form-label" htmlFor="aboutMe">About Me: </label>
+						<input
+						className="form-control form-control-lg"
 						type="text"
-						name="firstName"
-						value={firstName}
-						onChange={e => setFirstName(e.target.value)}
-					/>
-					<label htmlFor="lastName">Last Name: </label>
-					<input
-						type="text"
-						name="lastName"
-						value={lastName}
-						onChange={e => setLastName(e.target.value)}
-					/>
-					<label htmlFor="tattooStyle">Tattoo style: </label>
-					<Select 
-					name="tattooStyle"
-					components={animatedComponents}
-					isMulti
-					options={tattooStyles} 
-					onChange={handleTattooStyleChange}
-					/>
-					<label htmlFor="aboutMe">About Me: </label>
-					<input
-					type="text"
-					name="aboutMe"
-					value={aboutMe}
-					onChange={e => setAboutMe(e.target.value)}
-					/>
-					<button type="submit">Sign Up ✍️</button>
+						name="aboutMe"
+						value={aboutMe}
+						// style={{height:"150px"}}
+						onChange={e => setAboutMe(e.target.value)}
+						/>
+					</div>
+					<div className="mb-3">
+						<button className="btn btn-success btn-block col-12" type="submit">Sign Up ✍️</button>
+					</div>
 						{message && (
 						<h3>{message}</h3>
 				)}
 				</form>
+				</div>
+				</div>
+				</div>
+				</div>
 			</div>
 			}
 

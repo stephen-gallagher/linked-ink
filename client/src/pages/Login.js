@@ -3,11 +3,17 @@ import { login } from '../services/auth';
 
 export default function Login(props) {
 
+
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [message, setMessage] = useState('');
+    const [validated, setValidated] = useState(false);
+
 
 	const handleSubmit = e => {
+       
+  
+
 		e.preventDefault();
 		console.log(username, password)
 
@@ -37,27 +43,46 @@ export default function Login(props) {
 
 	return (
 		<>
-			<h3>Login</h3>
-			<form onSubmit={handleSubmit}>
-				<label htmlFor="username">Username: </label>
+			<h3 className="mt-4">Login</h3>
+            <div className="row">
+					<div className="col-md-6 offset-md-3 col-xl-4 offset-xl-4 mt-4 mb-5">
+					<div className="card shadow">
+							<img src="/tattoo-images/tattoo-girl-1.jpeg" alt="tattoo-girl"className="card-img-top"></img>
+							<div className="card-body">
+								<h5 className="card-title">Enter your details here</h5>
+			<form novalidate validated={validated} onSubmit={handleSubmit}>
+            <div className="mb-3">
+				<label className="form-label" htmlFor="username">Username: </label>
 				<input
+                    className="form-control"
 					type="text"
 					name="username"
 					value={username}
+                    required
 					onChange={e => setUsername(e.target.value)}
 				/>
-				<label htmlFor="password">Password: </label>
+        
+                </div>
+                <div className="mb-3">
+				<label className="form-label" htmlFor="password">Password (must be 4 characters min): </label>
 				<input
+                    className="form-control"
 					type="password"
 					name="password"
 					value={password}
+                    required
 					onChange={e => setPassword(e.target.value)}
 				/>
-				<button type="submit">Log in 🔑</button>
+                </div>
+				<button className="btn btn-success col-12" type="submit">Log in 🔑</button>
 				{message && (
 					<h3>{message}</h3>
 				)}
 			</form>
+            </div>
+            </div>
+            </div>
+            </div>
 		</>
 	)
 }
