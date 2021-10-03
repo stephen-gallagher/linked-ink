@@ -1,8 +1,13 @@
 import React from 'react'
+import styled from 'styled-components'
 
 export default function Toggle({onChange}) {
 
     return (
-         <input type="checkbox" onChange={onChange}/>
+        <label className="toggle-switch">
+            <input type="checkbox" onChange={onChange}/>
+            <span className="switch"/>
+        </label>
+ 
     )
 }

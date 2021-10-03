@@ -5,8 +5,6 @@ import { useEffect } from 'react';
 
 export default function ArtistProfile(props) {
 
-    const API_URL = 'http://localhost:5005';
-
     const [tattoos, setTattoos] = useState([]);
 
 	const getUserTattoos = () => {
