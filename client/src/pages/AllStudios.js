@@ -24,14 +24,6 @@ export default function AllArtists() {
 		getAllStudios();
 	}, [])
 
-    // const popover = (
-    //     <Popover>
-    //       <Popover.Title as="h3">(allArtists.name)</Popover.Title>
-    //       <Popover.Content>
-    //           The quick brown fox jumps over the lazy dog!
-    //       </Popover.Content>
-    //     </Popover>
-    //   );
     return (
         <div>
         <Link to="/new-studio">Add a new Studio</Link>
@@ -40,6 +32,7 @@ export default function AllArtists() {
                     return (
                         <div>
                             <img className="mt-5" src={studio.imageURL} style={{height: "300px"}}></img>
+                            <p><Link to={`/studio/${studio._id}`}> {studio.name} </Link> </p>
                         </div>
                     )
                 })

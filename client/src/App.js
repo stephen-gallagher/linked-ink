@@ -14,6 +14,7 @@ import Footer from './components/Footer';
 import AllArtists from './pages/AllArtists';
 import AllStudios from './pages/AllStudios';
 import NewStudio from './pages/NewStudio'
+import StudioShow from './pages/StudioShow';
 
 
 function App(props) {
@@ -73,6 +74,10 @@ function App(props) {
           <Route 
         exact path="/all-studios" 
         render={props => <AllStudios setUser={addUser} {...props} user={user}/> }
+        />
+        <Route 
+        exact path="/studio/:id" 
+        render={props => <StudioShow setUser={addUser} {...props} user={user}/> }
         />
       </Switch>
       <Footer/>

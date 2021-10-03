@@ -1,6 +1,10 @@
 const express = require("express")
 const router = express.Router();
 
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({accessToken: mapBoxToken})
+
 
 const User = require("../models/User")
 const Tattoo = require("../models/Tattoo")
@@ -82,13 +86,19 @@ router.get('/all-studios', (req, res, next) => {
 });
 
   // create new Studio
-router.post('/new-studio', (req, res, next) => {
+router.post('/new-studio', async (req, res, next) => {
+  console.log('hello')
+  const geoData = await geocoder.forwardGeocode({
+    query: req.body.location,
+    limit: 1
+  }).send()
   const {name, location, description, imageURL} = req.body
   User.findById(req.params.id)
-  .then(artist => {
+  .then(studio => {
     Studio.create({
       name: name, 
       location: location,
+      geometry: geoData.body.features[0].geometry,
       description: description,
       imageURL: imageURL
     })
@@ -99,6 +109,16 @@ router.post('/new-studio', (req, res, next) => {
 })
 })
 
+
+// studio show page
+router.get('/studio/:id', (req,res,next) => {
+  Studio.find({_id: req.params.id})
+  .then(studio => {
+      res.status(200).json(studio)
+   
+  })
+  .catch(err => next(err))
+})
 
 // Show Artist tatooo's
 router.get('/:id/artist-profile', (req,res,next) => {

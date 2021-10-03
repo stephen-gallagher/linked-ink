@@ -3,6 +3,17 @@ const { Schema, model } = require("mongoose");
 const studioSchema = new Schema ({
     name: String,
     location: String,
+    geometry: {
+        type: {
+        type: String,
+        enum:['Point'],
+        required: true
+    },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
     description: String,
     imageURL: String,
     artists:  [
