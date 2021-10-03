@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 
 export default function ArtistDashboard(props) {
 
+
     const [imageURL, setImageURL] = useState('')
     const [caption, setCaption] = useState('')
     const [tags, setTags] = useState('')

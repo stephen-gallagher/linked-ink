@@ -12,6 +12,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ArtistProfile from './pages/ArtistProfile';
 import Footer from './components/Footer';
 import AllArtists from './pages/AllArtists';
+import NewStudio from './pages/NewStudio'
 
 
 function App(props) {
@@ -64,6 +65,10 @@ function App(props) {
         exact path="/all-artists" 
         render={props => <AllArtists setUser={addUser} {...props} user={user}/> }
         />
+         <Route 
+          exact path="/new-studio" 
+          render={props => <NewStudio setUser={addUser} {...props} />}
+          />
       </Switch>
       <Footer/>
     </div>

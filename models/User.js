@@ -18,13 +18,12 @@ const userSchema = new Schema({
     String,
   ],
   aboutMe: String,
-
-  // favouriteArtists: [
-  //     {
-  //       type: Schema.Types.ObjectId,
-  //       ref: 'User',
-  //     }
-  //   ],
+  favouriteArtists: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      }
+    ],
   artistCollection: [
       {
         type: Schema.Types.ObjectId,
@@ -38,6 +37,16 @@ const userSchema = new Schema({
         location: String,
       }
     ],
+    reviews: [
+      {
+          type: Schema.Types.ObjectId,
+          ref: 'Review'
+      }
+  ],
+  myStudio: {
+    type: Schema.Types.ObjectId,
+    ref: 'Studio'
+    }
 });
 
 const User = model("User", userSchema);

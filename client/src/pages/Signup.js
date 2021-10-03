@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { signup } from '../services/auth';
-import Switch from 'react-switch'
 import Toggle from '../components/Toggle';
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
@@ -22,9 +21,9 @@ export default function Signup(props) {
 	const [role, setRole] = useState('Artist')
 	const [collections, setCollections] = useState('')
 
-	const [title, setTitle] = useState('')
-	const [description, setDescription] = useState('')
-	const [tattoos, setTattoos] = useState('')
+	// const [title, setTitle] = useState('')
+	// const [description, setDescription] = useState('')
+	// const [tattoos, setTattoos] = useState('')
 
 
 	const [message, setMessage] = useState('');
@@ -65,7 +64,7 @@ export default function Signup(props) {
 	
 
 	const handleSubmitUser = e => {
-		e.preventDefault();
+		e.preventDefault(); 
 		
 		signup(role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles, collections)
 			.then(response => {

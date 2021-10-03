@@ -23,7 +23,7 @@ export default function Navbar(props) {
         <Link to="/" class="nav-link" >Home <span class="sr-only"></span></Link>
       </li>
       <li class="nav-item">
-        <Link to="/artists" class="nav-link">Find an Artist</Link>
+        <Link to="/all-artists" class="nav-link">Find an Artist</Link>
       </li>
       <li class="nav-item">
         <Link to="/login" class="nav-link">Log In</Link>

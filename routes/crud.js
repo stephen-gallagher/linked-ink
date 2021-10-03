@@ -4,6 +4,7 @@ const router = express.Router();
 
 const User = require("../models/User")
 const Tattoo = require("../models/Tattoo")
+const Review = require("../models/Review")
 
 const fileUploader = require("../config/cloudinary");
 const { response } = require("express");
@@ -22,10 +23,8 @@ router.post("/upload", fileUploader.single("imageURL"), (req, res, next) => {
   });
 
   router.post('/tattoos/create', (req, res, next) => {
-    // const userID = req.session.user._id
 	const { imageURL, caption, tags } = req.body;
     if(req.session.user) {
-    console.log('userID', req.session.user._id)
 }
 if(req.session.user){
 	Tattoo.create({
@@ -33,7 +32,7 @@ if(req.session.user){
 		imageURL: imageURL,
 		tags: tags,
 		caption: caption,
-        artist: req.session.user._id
+    artist: req.session.user._id
 	})
 		.then(createdTattoo => {
             User.findByIdAndUpdate(req.session.user._id, { $push: {artistCollection: createdTattoo._id} })
@@ -51,7 +50,6 @@ if(req.session.user){
 router.get('/', (req, res, next) => {
     Tattoo.find()
       .then((tattoosFromDB) => {
-        // const loggedInUser = req.user;
         res.status(200).json(tattoosFromDB);
       })
       .catch((err) => {
@@ -64,7 +62,6 @@ router.get('/', (req, res, next) => {
 router.get('/all-artists', (req, res, next) => {
     User.find({role: 'Artist'})
       .then((artistsFromDB) => {
-        // const loggedInUser = req.user;
         res.status(200).json(artistsFromDB);
       })
       .catch((err) => {
@@ -73,15 +70,54 @@ router.get('/all-artists', (req, res, next) => {
   });
 
 
-// Artist tatooo's
+// Show Artist tatooo's
 router.get('/:id/artist-profile', (req,res,next) => {
-    Tattoo.find({artist: req.session.user._id})
+    Tattoo.find({artist: req.params.id})
     .then(tattoos => {
-        console.log('thetats', tattoos)
         res.status(200).json(tattoos)
      
     })
     .catch(err => next(err))
+})
+
+
+// create review on artist page
+router.post('/:id/artist-profile/reviews', (req, res, next) => {
+  const {reviewText, rating} = req.body
+  User.findById(req.params.id)
+  .then(artist => {
+    Review.create({
+      reviewText: reviewText, 
+      rating: rating,
+      reviewArtist: req.params.id,
+      reviewAuthor: req.session.user._id
+    })
+    .then(createdReview => {
+      artist.reviews.push(createdReview)
+      artist.save()
+    })
+  .catch(err => {
+    next(err);
+  })
+  .catch(err => {
+      console.log(err);
+  })
+  }) 
+})
+
+// Delete review
+router.delete('/:id/artist-profile/reviews/:reviewId', (req, res, next) => {
+  console.log("delete me!")
+})
+
+// Show Artist reviews's
+router.get('/:id/artist-profile/reviews', (req,res,next) => {
+  Review.find({artist: req.params.id})
+  .then(reviews => {
+      res.status(200).json(reviews)
+   
+  })
+  .catch(err => next(err))
 })
 
 

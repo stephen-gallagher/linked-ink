@@ -3,6 +3,8 @@ import { useState } from 'react';
 import axios from 'axios'
 import { useEffect } from 'react';
 import { OverlayTrigger, Popover, Button } from 'react-bootstrap';
+import {Link} from 'react-router-dom'
+
 
 export default function AllArtists() {
 
@@ -50,6 +52,8 @@ export default function AllArtists() {
                             >
                             <img className="mt-5" src={artist.profilePicture} style={{height: "300px"}}></img>
                             </OverlayTrigger>
+                            <p>{artist._id}</p>
+                            <p><Link to={`/${artist._id}/artist-profile`}> {artist.firstName} </Link> </p>
                         </div>
                     )
                 })
