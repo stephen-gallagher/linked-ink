@@ -5,6 +5,7 @@ const router = express.Router();
 const User = require("../models/User")
 const Tattoo = require("../models/Tattoo")
 const Review = require("../models/Review")
+const Studio = require("../models/Studio")
 
 const fileUploader = require("../config/cloudinary");
 const { response } = require("express");
@@ -68,6 +69,35 @@ router.get('/all-artists', (req, res, next) => {
         next(err);
       });
   });
+
+  //   all studios
+router.get('/all-studios', (req, res, next) => {
+  Studio.find()
+    .then((studiosFromDB) => {
+      res.status(200).json(studiosFromDB);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+  // create new Studio
+router.post('/new-studio', (req, res, next) => {
+  const {name, location, description, imageURL} = req.body
+  User.findById(req.params.id)
+  .then(artist => {
+    Studio.create({
+      name: name, 
+      location: location,
+      description: description,
+      imageURL: imageURL
+    })
+    .then(createdStudio => {
+      res.status(200).json(createdStudio)
+    })
+    .catch(err => next(err))
+})
+})
 
 
 // Show Artist tatooo's

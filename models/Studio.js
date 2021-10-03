@@ -5,10 +5,12 @@ const studioSchema = new Schema ({
     location: String,
     description: String,
     imageURL: String,
-    artists:  {
-        type: Schema.types.ObjectId,
-        ref: 'User',
+    artists:  [
+        {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
         },
+    ],
     reviews: [
         {
             type: Schema.Types.ObjectId,

@@ -217,7 +217,7 @@ export default function Signup(props) {
 					<h1 className="text-center">Create an artist account</h1>
 					<div className="col-md-6 offset-md-3 col-xl-6 offset-xl-3">
 					<div className="card shadow">
-							<img src="/tattoo-images/tattoo-artist-1.jpeg" alt="tattoo-girl"className="card-img-top"></img>
+							<img src="/tattoo-images/tattoo-artist-3.jpeg" alt="tattoo-girl"className="card-img-top"></img>
 							<div className="card-body">
 								<h5 className="card-title">Enter your details here</h5>
 				<form onSubmit={handleSubmitArtist}>
