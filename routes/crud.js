@@ -10,6 +10,7 @@ const User = require("../models/User")
 const Tattoo = require("../models/Tattoo")
 const Review = require("../models/Review")
 const Studio = require("../models/Studio")
+const Collection = require("../models/Collection")
 
 const fileUploader = require("../config/cloudinary");
 const { response } = require("express");
@@ -51,6 +52,26 @@ if(req.session.user){
 });
 
 
+// new collection
+router.post('/collections/new', (req, res, next) => {
+  const {title, description} = req.body
+
+  Collection.create({
+    title: title,
+    description: description,
+    creator: req.session.user._id
+  })
+  .then(createdCollection => {
+      User.findByIdAndUpdate(req.session.user._id, { $push: {userCollections: createdCollection._id} })
+      .then(userFromDB => {
+      res.status(200).json(userFromDB)
+      })
+      .catch(err => next(err))  
+  })
+  .catch(err => next(err)) 
+}) 
+
+
 // all tattoos
 router.get('/', (req, res, next) => {
     Tattoo.find()
@@ -62,6 +83,16 @@ router.get('/', (req, res, next) => {
       });
   });
 
+  // get specific tattoo
+  router.get('/tattoos/:id', (req, res, next) => {
+    Tattoo.findById(req.params.id)
+      .then((tattooFromDB) => {
+        res.status(200).json(tattooFromDB);
+      })
+      .catch((err) => {
+        next(err);
+      });
+  });
 
 //   all artists
 router.get('/all-artists', (req, res, next) => {
@@ -79,6 +110,18 @@ router.get('/all-studios', (req, res, next) => {
   Studio.find()
     .then((studiosFromDB) => {
       res.status(200).json(studiosFromDB);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+
+// get current user
+router.get('/users', (req, res, next) => {
+  User.findById(req.session.user._id)
+    .then((userFromDB) => {
+      res.status(200).json(userFromDB);
     })
     .catch((err) => {
       next(err);
@@ -120,6 +163,17 @@ router.get('/studio/:id', (req,res,next) => {
   .catch(err => next(err))
 })
 
+// get user profile
+router.get('/:id/artist-profile/user', (req, res, next) => {
+  User.findById(req.params.id)
+    .then((artistFromDB) => {
+      res.status(200).json(artistFromDB);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
 // Show Artist tatooo's
 router.get('/:id/artist-profile', (req,res,next) => {
     Tattoo.find({artist: req.params.id})
@@ -128,6 +182,16 @@ router.get('/:id/artist-profile', (req,res,next) => {
      
     })
     .catch(err => next(err))
+})
+
+// Show User's collections's
+router.get('/user/collections', (req,res,next) => {
+  Collection.find({creator: req.session.user._id})
+  .then(collections => {
+      res.status(200).json(collections)
+   
+  })
+  .catch(err => next(err))
 })
 
 
@@ -140,7 +204,8 @@ router.post('/:id/artist-profile/reviews', (req, res, next) => {
       reviewText: reviewText, 
       rating: rating,
       reviewArtist: req.params.id,
-      reviewAuthor: req.session.user._id
+      reviewAuthor: req.session.user._id,
+      reviewAuthorUsername: req.session.user.username
     })
     .then(createdReview => {
       artist.reviews.push(createdReview)
@@ -162,7 +227,7 @@ router.delete('/:id/artist-profile/reviews/:reviewId', (req, res, next) => {
 
 // Show Artist reviews's
 router.get('/:id/artist-profile/reviews', (req,res,next) => {
-  Review.find({artist: req.params.id})
+  Review.find({reviewArtist: req.params.id})
   .then(reviews => {
       res.status(200).json(reviews)
    

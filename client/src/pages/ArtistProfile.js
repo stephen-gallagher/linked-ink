@@ -3,19 +3,37 @@ import { useState } from 'react';
 import axios from 'axios'
 import { useEffect } from 'react';
 import '../Starability.css'
+import {Link} from 'react-router-dom'
 
 export default function ArtistProfile(props) {
-console.log(props)
+    const [user, setUser] = useState({})
     const [tattoos, setTattoos] = useState([]);
     const [reviewText, setReviewText] = useState('')
     const [rating, setRating] = useState(0)
+    const [reviews, setReviews] = useState([])
     const [reviewArtist, setReviewArtist] = useState([])
+    const [reviewAuthorUsername, setReviewAuthorUsername] = useState('')
+
+    const API_URL = 'http://localhost:5005'
+
+    const getUser = () => {
+        axios.get(`/api/crud/${props.match.params.id}/artist-profile/user`)
+        .then(response => {
+            setUser(response.data);
+        })
+        .catch(err => console.log(err));
+    }
+    useEffect(() => { 
+        getUser();
+    }, []) 
+
 
 	const getUserTattoos = () => {
 		// get request to the server
-		axios.get(`/api/crud/${props.user._id}/artist-profile`)
+		axios.get(`/api/crud/${props.match.params.id}/artist-profile`)
 			.then(response => {
 				setTattoos(response.data);
+                console.log('tattooo', response.data)
 			})
 			.catch(err => console.log(err));
 	}
@@ -23,11 +41,9 @@ console.log(props)
 		getUserTattoos();
 	}, [])
 
-
-
     const getProfileReviews = () => {
 		// get request to the server
-		axios.get(`/api/crud/${props.user._id}/artist-profile/reviews`)
+		axios.get(`/api/crud/${props.match.params.id}/artist-profile/reviews`)
 			.then(response => {
 				setReviewArtist(response.data);
 			})
@@ -40,9 +56,10 @@ console.log(props)
 
     const handleSubmit = (e) => {
 		e.preventDefault();
-         axios.post(`/api/crud/${props.match.params.id}/artist-profile/reviews`, {reviewText, rating})
+         axios.post(`/api/crud/${props.match.params.id}/artist-profile/reviews`, {reviewText, rating, reviewAuthorUsername})
          .then(response => {
 			return response.data;
+            // props.history.push(`/${user._id}/artist-profile`)
 		})
 		.catch(err => {
 			return err.response.data;
@@ -67,23 +84,26 @@ console.log(props)
         <div className="row">
             <div className="col-6">
                 <div className="card mb-3">
-                    <h1>{props.user.firstName}'s profile</h1>
-                    <img src={props.user.profilePicture} className="card-img-top" style={{width:"200px"}}/>
+                    <h1>{user.firstName}'s profile</h1>
+                    <img src={user.profilePicture} className="card-img-top" style={{width:"200px"}}/>
                         <div className="card-body">
-                            <p>About me: {props.user.aboutMe}</p>
+                            <p>About me: {user.aboutMe}</p>
 
-                            <h2>{props.user.firstName}'s tattoos</h2>
+                            <h2>{user.firstName}'s tattoos</h2>
                             {tattoos.map((tattoo) => {
-                                return <img src={tattoo.imageURL}></img>
-                                {/* <p>{tattoo.caption}</p> */}
-                            
+                                return (
+                                    <Link to={`/tattoos/${tattoo._id}`}>
+                                    <div> <img src={tattoo.imageURL}></img>
+                                <p>{tattoo.caption}</p>
+                                </div>
+                                </Link>
+                                )
                             })}
                     </div>          
                 </div>
             </div>
-        </div>
-
-            <div className="row">
+          
+           {/* <div className="row"> */}
                 <div className="col-6">
                     <h2>Leave a review!</h2>
                     <form className="mb-3" onSubmit={handleSubmit}>
@@ -123,11 +143,13 @@ console.log(props)
                 return (
                     <div className="card mb-3">
                         <div className="card-body">
-                            <h5 className="card-title">Rating: {review.rating}</h5>
+                            <h5 className="card-title">Username: {review.reviewAuthorUsername}</h5>
                                 <p class="starability-result" data-rating={`${review.rating}`}>
                                     Rated: {`${review.rating}`} stars
                                 </p>
                             <p className="card-text">Review: {review.reviewText}</p>
+                            
+                            
                             <form onSubmit={handleDeleteSubmit}>
                                 <button className="btn btn-sm btn-danger">Delete</button>
                             </form>
@@ -136,7 +158,12 @@ console.log(props)
                 )
             })}
             </div>
+        {/* </div> */}
+
         </div>
+
+
+           
         </>
     )
 }

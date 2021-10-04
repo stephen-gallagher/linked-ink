@@ -19,7 +19,7 @@ export default function Signup(props) {
 	const [favouriteStyles, setFavouriteStyles] = useState('')
 	const [aboutMe, setAboutMe] = useState('')
 	const [role, setRole] = useState('Artist')
-	const [collections, setCollections] = useState('')
+	const [userCollections, setUserCollections] = useState('')
 
 	// const [title, setTitle] = useState('')
 	// const [description, setDescription] = useState('')
@@ -66,7 +66,7 @@ export default function Signup(props) {
 	const handleSubmitUser = e => {
 		e.preventDefault(); 
 		
-		signup(role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles, collections)
+		signup(role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles, userCollections)
 			.then(response => {
 				if (response.message) {
 					// reset the form 
@@ -90,9 +90,8 @@ export default function Signup(props) {
 	const handleSubmitArtist = e => {
 		e.preventDefault();
 		
-		signup(role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles)
+		signup(role, username, password, profilePicture, firstName, lastName, aboutMe, tattooStyle, favouriteStyles, userCollections)
 			.then(response => {
-				console.log('the response', response)
 				if (response.message) {
 					// reset the form 
                     setUsername('');

@@ -10,7 +10,8 @@ const reviewSchema = new Schema ({
     reviewAuthor: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    reviewAuthorUsername: 'String'
 })
 
 const Review = model("Review", reviewSchema);

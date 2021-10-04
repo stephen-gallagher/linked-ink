@@ -2,7 +2,7 @@
 import './App.css';
 import Navbar from './components/Navbar';
 import Homepage from './pages/Homepage';
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import {Switch, Route} from 'react-router-dom';
 import Signup from './pages/Signup';
 import Login from './pages/Login'
@@ -15,9 +15,12 @@ import AllArtists from './pages/AllArtists';
 import AllStudios from './pages/AllStudios';
 import NewStudio from './pages/NewStudio'
 import StudioShow from './pages/StudioShow';
+import TattooView from './components/TattooView';
+
 
 
 function App(props) {
+
 
   const [user, setUser] = useState()
   const [artist,setArtist] = useState()
@@ -57,11 +60,11 @@ function App(props) {
         exact path="/:id/artist-dashboard" 
         user={user}
         component={ArtistDashboard}/>
-        <ProtectedRoute 
+        <Route 
         exact path="/:id/artist-profile" 
-        user={user}
-        component={ArtistProfile}
-        // render={props => <ArtistProfile setUser={addUser} {...props} user={user}/>}
+        // user={user}
+        // component={ArtistProfile}
+        render={props => <ArtistProfile setUser={addUser} {...props} user={user}/>}
         />
         <Route 
         exact path="/all-artists" 
@@ -78,6 +81,10 @@ function App(props) {
         <Route 
         exact path="/studio/:id" 
         render={props => <StudioShow setUser={addUser} {...props} user={user}/> }
+        />
+        <Route
+          exact path="/tattoos/:id"
+          render={props => <TattooView setUser={addUser} {...props} />}
         />
       </Switch>
       <Footer/>

@@ -30,6 +30,12 @@ const userSchema = new Schema({
         ref: 'Tattoo',
       }
     ],
+    userCollections: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Tattoo',
+      }
+    ],
     myAppointments: [
       {
         date: Date,

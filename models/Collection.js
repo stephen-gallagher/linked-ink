@@ -5,19 +5,14 @@ title: String,
 description: String,
 tattoos:[
     {
-        image: String,
-        // artist: 
-        // {
-        //         type: Schema.types.ObjectId,
-        //         ref: User,
-        // },
-        tags: [
-            String,
-        ],
-        caption: String,
-        location: String,
+    type: Schema.Types.ObjectId,
+    ref: 'Tattoo',
     }
-    ]
+    ],
+creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+}
 })
 
 const Collection = model("Collection", collectionSchema);
