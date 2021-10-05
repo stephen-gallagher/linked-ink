@@ -50,18 +50,21 @@ export default function StudioShow(props) {
         container: mapContainer.current,
         style: 'mapbox://styles/mapbox/streets-v11',
         center: [lng, lat],
-        zoom: 14
+        zoom: 9
         });
+       new mapboxgl.Marker()
+              .setLngLat([lng, lat])
+              .addTo(map.current)
         // map.current = new mapboxgl.Marker()
         // .setLngLat([lng, lat])
         // .addTo(map)
     }
         }, [lat]);
 
-        // let marker = new mapboxgl.marker()
-        // .setLngLat([lng, lat])
-        // .addTo(map)
 
+    
+
+ 
         // useEffect(() => {
         //     if (!map.current) return; // wait for map to initialize
         //     map.current.on('move', () => {
@@ -73,17 +76,21 @@ export default function StudioShow(props) {
 
     return (
         <div>
-            <div>
+            <div className="row">
+            <div clssName="col-6">
             <div className="sidebar">
             Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
                 <div ref={mapContainer} className="mapContainer" />
             </div>
-
+            
+            <div className="col-6">
             <h1>{name}</h1>
             <h2>{location}</h2>
             <p>{description}</p>
             {/* <p>{geometry}</p> */}
+            </div>
+            </div>
         </div>
     )
 }

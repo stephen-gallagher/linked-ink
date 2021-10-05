@@ -77,3 +77,12 @@
   background-color: #171c22;
 }
 
+.img-thumbnail {
+  object-fit: cover; /* Do not scale the image */
+  width: 100%;
+}
+
+.artist-image {
+  object-fit: cover; /* Do not scale the image */
+  width: 100%;
+}

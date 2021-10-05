@@ -17,7 +17,7 @@ export default function ArtistProfile(props) {
     const API_URL = 'http://localhost:5005'
 
     const getUser = () => {
-        axios.get(`/api/crud/${props.match.params.id}/artist-profile/user`)
+         axios.get(`/api/crud/${props.match.params.id}/artist-profile/user`)
         .then(response => {
             setUser(response.data);
         })
@@ -30,7 +30,7 @@ export default function ArtistProfile(props) {
 
 	const getUserTattoos = () => {
 		// get request to the server
-		axios.get(`/api/crud/${props.match.params.id}/artist-profile`)
+		 axios.get(`/api/crud/${props.match.params.id}/artist-profile`)
 			.then(response => {
 				setTattoos(response.data);
                 console.log('tattooo', response.data)
@@ -41,9 +41,9 @@ export default function ArtistProfile(props) {
 		getUserTattoos();
 	}, [])
 
-    const getProfileReviews = () => {
+    const getProfileReviews =  () => {
 		// get request to the server
-		axios.get(`/api/crud/${props.match.params.id}/artist-profile/reviews`)
+		 axios.get(`/api/crud/${props.match.params.id}/artist-profile/reviews`)
 			.then(response => {
 				setReviewArtist(response.data);
 			})
@@ -51,7 +51,7 @@ export default function ArtistProfile(props) {
 	}
 	useEffect(() => { 
 		getProfileReviews();
-	}, [])
+	}, [reviewArtist])
 
 
     const handleSubmit = (e) => {
@@ -82,30 +82,26 @@ export default function ArtistProfile(props) {
     return (
         <>
         <div className="row">
-            <div className="col-6">
+            <div className="col-4 offset-1 mt-3 ml-1">
                 <div className="card mb-3">
                     <h1>{user.firstName}'s profile</h1>
-                    <img src={user.profilePicture} className="card-img-top" style={{width:"200px"}}/>
+                    <img src={user.profilePicture} className="card-img-top rounded mx-auto d-block" style={{width:"200px"}}/>
                         <div className="card-body">
-                            <p>About me: {user.aboutMe}</p>
+                            <p><strong>Name:</strong> {user.firstName} {user.lastName}</p>
+                            <p><strong>Bio:</strong> {user.aboutMe}</p>
+                            {/* <p><strong>Tattoo Style/s:</strong> {user.tattooStyle.map(style => {
+                                return <ul>
+                                            <li>
+                                                {style}
+                                            </li>
+                                        </ul>
+                            })} 
+                                 </p> */}
 
-                            <h2>{user.firstName}'s tattoos</h2>
-                            {tattoos.map((tattoo) => {
-                                return (
-                                    <Link to={`/tattoos/${tattoo._id}`}>
-                                    <div> <img src={tattoo.imageURL}></img>
-                                <p>{tattoo.caption}</p>
-                                </div>
-                                </Link>
-                                )
-                            })}
-                    </div>          
-                </div>
+                        </div>          
+                        
             </div>
-          
-           {/* <div className="row"> */}
-                <div className="col-6">
-                    <h2>Leave a review!</h2>
+                <h2>Leave a review!</h2>
                     <form className="mb-3" onSubmit={handleSubmit}>
                         <div className="mb-3 offset-4">  
                             <fieldset className="starability-fade">
@@ -158,7 +154,29 @@ export default function ArtistProfile(props) {
                 )
             })}
             </div>
-        {/* </div> */}
+          
+           {/* <div className="row"> */}
+                <div className="col-6 mt-3 card mb-3">
+
+                <h2>{user.firstName}'s tattoos</h2>
+                <div className='d-flex flex-wrap'>
+                            {tattoos.map((tattoo) => {
+                                return (
+                                    <div className=""> 
+                                        <Link to={`/tattoos/${tattoo._id}`}>
+                                        
+                                            <img className="img-thumbnail img-fluid" src={tattoo.imageURL} style={{width:"220px", height:"220px"}}></img>                                        
+                                        </Link>
+                                        </div>
+                                    
+                                )
+                            })}
+                            </div>
+
+
+  
+            </div>
+ 
 
         </div>
 

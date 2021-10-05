@@ -35,29 +35,26 @@ export default function AllArtists() {
     //     </Popover>
     //   );
     return (
-        <div>
+        <div className='mt-5'>
         <h1>Find an Artist</h1>
+        <div className="col-6 offset-3">
+        <h4>Browse through the list of our registered artist to find the perfect match for your next tattoo idea. Click on the image below to view their profile</h4>
+        </div>
+        <div className="col-10 offset-1 d-flex flex-wrap">
              {allArtists.map(artist => {
                     return (
-                        <div>
-                            <OverlayTrigger 
-                            trigger="hover" 
-                            placement="right" 
-                            overlay={<div><Popover>
-          <Popover.Title as="h3">(artist.firstName)</Popover.Title>
-          <Popover.Content>
-              The quick brown fox jumps over the lazy dog!
-          </Popover.Content>
-        </Popover></div>}
-                            >
-                            <img className="mt-5" src={artist.profilePicture} style={{height: "300px"}}></img>
-                            </OverlayTrigger>
-                            <p>{artist._id}</p>
-                            <p><Link to={`/${artist._id}/artist-profile`}> {artist.firstName} </Link> </p>
+                        
+                            <div className="p-5">
+                                <Link to={`/${artist._id}/artist-profile`}>
+                                  <img className="artist-image rounded border border-dark shadow" src={artist.profilePicture} style={{width: "300px", height: "400px"}}></img>
+                                    <p> {artist.firstName} {artist.lastName}</p>
+                                </Link> 
+                          
                         </div>
                     )
                 })
              }
+             </div>
         </div>
     )
 }

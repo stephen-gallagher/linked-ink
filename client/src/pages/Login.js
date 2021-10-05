@@ -32,7 +32,7 @@ export default function Login(props) {
 					props.setUser(response);
 					// redirect to the projects overview
                     if(response.role === 'User'){
-					props.history.push('/:id/user-dashboard');
+					props.history.push(`/${response._id}/user-dashboard`)
                     } else if(response.role === 'Artist'){
                         props.history.push(`/${response._id}/artist-dashboard`)
 				}

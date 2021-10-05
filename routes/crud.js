@@ -71,6 +71,25 @@ router.post('/collections/new', (req, res, next) => {
   .catch(err => next(err)) 
 }) 
 
+// add tattoo to the collection
+router.put('/tattoos/:id', (req, res, next) => {
+const {selectedCollection} = req.body
+console.log('selected', selectedCollection)
+const tattooId = req.params.id
+if(req.session.user){
+Collection.findOneAndUpdate({creator: `${req.session.user._id}`, title: `${selectedCollection}`}, { $push: {tattoos: tattooId} })
+  .then(collectionFromDB => {
+    console.log('this is the collection', collectionFromDB)
+    res.status(200).json(collectionFromDB);
+  })
+  .catch((err) => {
+    next(err);
+
+  }) 
+}
+})
+
+
 
 // all tattoos
 router.get('/', (req, res, next) => {
@@ -118,8 +137,8 @@ router.get('/all-studios', (req, res, next) => {
 
 
 // get current user
-router.get('/users', (req, res, next) => {
-  User.findById(req.session.user._id)
+router.get('/users', async (req, res, next) => {
+  await User.findById(req.session.user._id)
     .then((userFromDB) => {
       res.status(200).json(userFromDB);
     })
@@ -164,8 +183,8 @@ router.get('/studio/:id', (req,res,next) => {
 })
 
 // get user profile
-router.get('/:id/artist-profile/user', (req, res, next) => {
-  User.findById(req.params.id)
+router.get('/:id/artist-profile/user', async (req, res, next) => {
+  await User.findById(req.params.id)
     .then((artistFromDB) => {
       res.status(200).json(artistFromDB);
     })
@@ -175,8 +194,8 @@ router.get('/:id/artist-profile/user', (req, res, next) => {
 });
 
 // Show Artist tatooo's
-router.get('/:id/artist-profile', (req,res,next) => {
-    Tattoo.find({artist: req.params.id})
+router.get('/:id/artist-profile', async (req,res,next) => {
+   await  Tattoo.find({artist: req.params.id})
     .then(tattoos => {
         res.status(200).json(tattoos)
      
@@ -184,9 +203,24 @@ router.get('/:id/artist-profile', (req,res,next) => {
     .catch(err => next(err))
 })
 
+
+// get specific user collection
+router.get('/collections/:id', async (req, res, next) => { 
+await Collection.findById(req.params.id)
+.populate("tattoos")
+.then(collection => {
+  console.log('the collection', collection)
+  res.status(200).json(collection)
+
+})
+.catch(err => next(err))
+})
+
+
 // Show User's collections's
 router.get('/user/collections', (req,res,next) => {
   Collection.find({creator: req.session.user._id})
+  .populate("tattoos")
   .then(collections => {
       res.status(200).json(collections)
    
@@ -226,8 +260,8 @@ router.delete('/:id/artist-profile/reviews/:reviewId', (req, res, next) => {
 })
 
 // Show Artist reviews's
-router.get('/:id/artist-profile/reviews', (req,res,next) => {
-  Review.find({reviewArtist: req.params.id})
+router.get('/:id/artist-profile/reviews', async (req,res,next) => {
+  await Review.find({reviewArtist: req.params.id})
   .then(reviews => {
       res.status(200).json(reviews)
    

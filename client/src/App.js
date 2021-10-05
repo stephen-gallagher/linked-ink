@@ -16,6 +16,7 @@ import AllStudios from './pages/AllStudios';
 import NewStudio from './pages/NewStudio'
 import StudioShow from './pages/StudioShow';
 import TattooView from './components/TattooView';
+import CollectionView from './components/CollectionView';
 
 
 
@@ -85,6 +86,10 @@ function App(props) {
         <Route
           exact path="/tattoos/:id"
           render={props => <TattooView setUser={addUser} {...props} />}
+        />
+        <Route
+          exact path="/collections/:id"
+          render={props => <CollectionView setUser={addUser} {...props} />}
         />
       </Switch>
       <Footer/>

@@ -29,6 +29,12 @@ export default function Navbar(props) {
         <Link to="/all-studios" className="nav-link">Find a Studio</Link>
       </li>
       <li className="nav-item">
+        <Link to="/:id/artist-dashboard" className="nav-link">My Dashboard</Link>
+      </li>
+      <li className="nav-item">
+        <Link to="/:id/artist-profile" className="nav-link">My Profile</Link>
+      </li>
+      <li className="nav-item">
         <Link to="/login" className="nav-link">Log In</Link>
       </li>
       <li className="nav-item">
