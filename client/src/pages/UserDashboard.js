@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 export default function UserDashboard(props) {
 
-    const [collections, setCollections] = useState([])
+    const [collections, setCollections] = useState(null)
 
     const getUserCollections = () => {
 		axios.get(`/api/crud/user/collections`)
@@ -20,8 +20,10 @@ export default function UserDashboard(props) {
 		getUserCollections();
 	}, [])
 
-
-    console.log(props)
+	if(collections === null){
+		return<></>
+	}
+    
     return (
         <div>
             <h1>Welcome  {props.user.username}</h1>

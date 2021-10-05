@@ -3,6 +3,8 @@ import { useEffect, useState, useRef } from 'react';
 import axios from 'axios'
 // import MapboxGL from "@react-native-mapbox-gl/maps";
 import mapboxgl from 'mapbox-gl'
+import {Link} from 'react-router-dom'
+
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic3RlcGhlbmdhbGxhZ2hlciIsImEiOiJja25mdmVwN2wxYzd0Mm9vN3A2bjV1a2U1In0.2-AsAryWffIh9UqbCHW_GQ"
 
@@ -22,6 +24,7 @@ export default function StudioShow(props) {
     const [name, setName] = useState('')
     const [location , setLocation] = useState('')
     const [description, setDescription] = useState('')
+    const [artists, setArtists] = useState([])
 
     // const [geometry, setGeometry] = useState({})
 
@@ -44,35 +47,57 @@ export default function StudioShow(props) {
 
 	}, [])
 
+
+    const getStudioArtists = () => {
+		// get request to the server
+		 axios.get(`/api/crud/studios/${props.match.params.id}`)
+			.then(response => {
+				setArtists(response.data);
+                console.log('studioartists', response.data)
+			})
+			.catch(err => console.log(err));
+	}
+	useEffect(() => { 
+		getStudioArtists();
+	}, [])
+
+
+
        useEffect(() => {
         if(lng !==0 ){
         map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: 'mapbox://styles/mapbox/streets-v11',
         center: [lng, lat],
-        zoom: 9
+        zoom: 14
         });
-       new mapboxgl.Marker()
-              .setLngLat([lng, lat])
-              .addTo(map.current)
-        // map.current = new mapboxgl.Marker()
-        // .setLngLat([lng, lat])
-        // .addTo(map)
+        new mapboxgl.Marker()
+        .setLngLat([lng, lat])
+        .addTo(map.current)
+    
     }
         }, [lat]);
 
 
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            axios.put(`/api/crud/studio/${props.match.params.id}`)
+            .then(response => {
+                return response.data;
+            })
+            .catch(err => {
+                return err.response.data;
+            });
+        }
     
 
- 
-        // useEffect(() => {
-        //     if (!map.current) return; // wait for map to initialize
-        //     map.current.on('move', () => {
-        //     setLng(map.current.getCenter().lng.toFixed(4));
-        //     setLat(map.current.getCenter().lat.toFixed(4));
-        //     setZoom(map.current.getZoom().toFixed(2));
-        //     });
-        //     }, []);
+        if(mapContainer === null){
+            return<></>
+        }
+
+        if(name === '') {
+            return <></>
+        }
 
     return (
         <div>
@@ -81,14 +106,37 @@ export default function StudioShow(props) {
             <div className="sidebar">
             Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
-                <div ref={mapContainer} className="mapContainer" />
+                <div ref={mapContainer} className="mapContainer" style={{height:"300px", width:"300px"}}/>
             </div>
+           
             
             <div className="col-6">
             <h1>{name}</h1>
             <h2>{location}</h2>
             <p>{description}</p>
-            {/* <p>{geometry}</p> */}
+            <form onSubmit={handleSubmit}>
+                <button type="submit" className="btn btn-primary">Join this studio</button>
+            </form>
+            </div>
+
+            <div className='col-6'> 
+
+
+            
+            <h4>Artists at this studio</h4>
+            {artists.map(artist => {
+                    return (
+                        
+                            <div className="p-5">
+                                <Link to={`/${artist._id}/artist-profile`}>
+                                  <img className="artist-image rounded border border-dark shadow" src={artist.profilePicture} style={{width: "200px", height: "300px"}}></img>
+                                    <p> {artist.firstName} {artist.lastName}</p>
+                                </Link> 
+                          
+                        </div>
+                    )
+                })
+             }
             </div>
             </div>
         </div>

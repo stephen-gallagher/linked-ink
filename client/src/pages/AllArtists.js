@@ -12,6 +12,7 @@ export default function AllArtists() {
 
 
     const [allArtists, setAllArtists] = useState([]);
+    const [search, setSearch] = useState('')
 
     const getAllArtists = () => {
 		// get request to the server
@@ -26,20 +27,30 @@ export default function AllArtists() {
 		getAllArtists();
 	}, [])
 
-    // const popover = (
-    //     <Popover>
-    //       <Popover.Title as="h3">(allArtists.name)</Popover.Title>
-    //       <Popover.Content>
-    //           The quick brown fox jumps over the lazy dog!
-    //       </Popover.Content>
-    //     </Popover>
-    //   );
+
+    const handleSearchChange = event => {
+        event.preventDefault()
+        setSearch(event.target.value)
+        let newList = allArtists.filter((artist) => {
+          return `${artist.firstName}${artist.lastName}`.toLowerCase().includes(search.toLowerCase())
+        })
+        setAllArtists(newList)
+      }
+
+
+
+
     return (
         <div className='mt-5'>
         <h1>Find an Artist</h1>
         <div className="col-6 offset-3">
         <h4>Browse through the list of our registered artist to find the perfect match for your next tattoo idea. Click on the image below to view their profile</h4>
         </div>
+        
+
+        <input type="text" name="search" id="search" value={search} placeholder="Search By Name" onChange={handleSearchChange}/>
+
+
         <div className="col-10 offset-1 d-flex flex-wrap">
              {allArtists.map(artist => {
                     return (

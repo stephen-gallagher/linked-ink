@@ -10,6 +10,7 @@ export default function AllArtists() {
 
 
     const [allStudios, setAllStudios] = useState([]);
+    const [search, setSearch] = useState('')
 
     const getAllStudios = () => {
 		// get request to the server
@@ -24,19 +25,53 @@ export default function AllArtists() {
 		getAllStudios();
 	}, [])
 
+
+    const handleSearchChange = event => {
+        event.preventDefault()
+        setSearch(event.target.value)
+        let newList = allStudios.filter((studio) => {
+          return `${studio.name}`.toLowerCase().includes(search.toLowerCase())
+        })
+        setAllStudios(newList)
+      }
+
     return (
         <div>
-        <Link to="/new-studio">Add a new Studio</Link>
+
+        <div className='mt-5'>
         <h1>Find a Studio</h1>
+        <div className="col-6 offset-3">
+        <h3>All participating studios are listed below</h3>
+        <h5>Would you like to add a new studio? <Link to="/new-studio">Click here</Link></h5>
+        </div>
+
+        <input type="text" name="search" id="search" value={search} placeholder="Search By Name" onChange={handleSearchChange}/>
+
+
+        <div className="mt-5 mb-5 d-flex flex-wrap">
+       
              {allStudios.map(studio => {
                     return (
-                        <div>
-                            <img className="mt-5" src={studio.imageURL} style={{height: "300px"}}></img>
-                            <p><Link to={`/studio/${studio._id}`}> {studio.name} </Link> </p>
+                        <div className="col-5 mb-5 offset-1 card bg-dark bg-gradient text-white border-dark" >
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <img className="img-fluid rounded mt-2 mb-2 border-light" src={studio.imageURL} style={{height: "200px"}}></img>
+                                </div>
+                                <div className="col-md-6">
+                                    <div className="card-body mt-5">
+                                        <h4 className="card-title"> {studio.name}</h4>
+                                        <p className="card-text"> {studio.location}</p>
+                                        <button className='btn btn-light text-dark'><Link className="text-dark" to={`/studio/${studio._id}`}>View this studio</Link></button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )
                 })
              }
+            
+             </div>
+        </div>
         </div>
     )
 }

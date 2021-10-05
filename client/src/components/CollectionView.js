@@ -7,7 +7,7 @@ import Select from 'react-select'
 
 export default function CollectionView(props) {
 
-    const [collection, setCollection] = useState([])
+    const [collection, setCollection] = useState(null)
     const [currentUser, setCurrentUser] = useState({})
 
 
@@ -42,16 +42,20 @@ export default function CollectionView(props) {
 
 
 
-
+	if(collection === null){
+		return<></>
+	}
+	
     return (
 
         <>
+			
             <p>{collection.title}</p>
-             {/* {collection.tattoos.map((tattoo) => {
+             {collection.tattoos.map((tattoo) => {
                      return (
                     <img src={tattoo.imageURL}></img>
                      )
-                 })} */}
+                 })}
             
             
         </>

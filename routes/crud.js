@@ -74,7 +74,6 @@ router.post('/collections/new', (req, res, next) => {
 // add tattoo to the collection
 router.put('/tattoos/:id', (req, res, next) => {
 const {selectedCollection} = req.body
-console.log('selected', selectedCollection)
 const tattooId = req.params.id
 if(req.session.user){
 Collection.findOneAndUpdate({creator: `${req.session.user._id}`, title: `${selectedCollection}`}, { $push: {tattoos: tattooId} })
@@ -89,6 +88,37 @@ Collection.findOneAndUpdate({creator: `${req.session.user._id}`, title: `${selec
 }
 })
 
+// add artist to studio and studio to artist
+router.put('/studio/:id', (req, res, next) => {
+  const studioId = req.params.id
+  if(req.session.user){
+    Studio.findByIdAndUpdate(req.params.id, { $push: {artists: req.session.user._id}})
+    .then(studioFromDB => {
+      console.log(studioFromDB)
+      res.status(200).json(studioFromDB);
+      User.findByIdAndUpdate(req.session.user._id, { $push: {myStudio: studioId}})
+      .then(userFromDB => {
+        res.status(200).json(userFromDB);
+      })
+      .catch((err) => {
+        next(err);
+    })
+    .catch((err) => {
+      next(err);
+    })
+  })
+  }
+})
+
+// get all artists in the studio
+router.get('/studios/:id',  (req,res,next) => {
+  User.find({myStudio: req.params.id})
+ .then(tattooArtists => {
+     res.status(200).json(tattooArtists)
+  
+ })
+ .catch(err => next(err))
+})
 
 
 // all tattoos
@@ -194,8 +224,8 @@ router.get('/:id/artist-profile/user', async (req, res, next) => {
 });
 
 // Show Artist tatooo's
-router.get('/:id/artist-profile', async (req,res,next) => {
-   await  Tattoo.find({artist: req.params.id})
+router.get('/:id/artist-profile',  (req,res,next) => {
+     Tattoo.find({artist: req.params.id})
     .then(tattoos => {
         res.status(200).json(tattoos)
      
@@ -254,9 +284,12 @@ router.post('/:id/artist-profile/reviews', (req, res, next) => {
   }) 
 })
 
+
 // Delete review
 router.delete('/:id/artist-profile/reviews/:reviewId', (req, res, next) => {
-  console.log("delete me!")
+  const reviewId = req.params.reviewId
+  console.log('thereviewid', reviewId)
+  Review.findByIdAndDelete(reviewId)
 })
 
 // Show Artist reviews's

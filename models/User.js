@@ -10,6 +10,7 @@ const userSchema = new Schema({
   role: String,
   firstName: String,
   lastName: String,
+  email: String,
   profilePicture: String,
   tattooStyle: [
     String
