@@ -1,12 +1,14 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios'
 import { useEffect } from 'react';
 import { OverlayTrigger, Popover, Button } from 'react-bootstrap';
 import {Link} from 'react-router-dom'
 
 
+
 export default function AllArtists() {
+
 
 
     const [allStudios, setAllStudios] = useState([]);
@@ -37,6 +39,14 @@ export default function AllArtists() {
 
     return (
         <div>
+
+
+        
+
+
+
+
+
 
         <div className='mt-5'>
         <h1>Find a Studio</h1>

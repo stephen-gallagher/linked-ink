@@ -28,7 +28,7 @@ export default function AllArtists() {
 	}, [])
 
 
-    const handleSearchChange = event => {
+    const handleNameSearchChange = event => {
         event.preventDefault()
         setSearch(event.target.value)
         let newList = allArtists.filter((artist) => {
@@ -37,7 +37,22 @@ export default function AllArtists() {
         setAllArtists(newList)
       }
 
+      if(allArtists === []){
+		return<></>
+	}
 
+    const handleStyleSearchChange = event => {
+        event.preventDefault()
+        setSearch(event.target.value)
+        let newList = allArtists.filter((artist) => {
+          return `${artist.tattooStyle}`.toLowerCase().includes(search.toLowerCase())
+        })
+        setAllArtists(newList)
+      }
+
+      if(allArtists === []){
+		return<></>
+	}
 
 
     return (
@@ -47,19 +62,30 @@ export default function AllArtists() {
         <h4>Browse through the list of our registered artist to find the perfect match for your next tattoo idea. Click on the image below to view their profile</h4>
         </div>
         
+        <label>Search by name: </label>
+        <input type="text" name="search" id="search" value={search} placeholder="e.g Traditional" onChange={handleNameSearchChange}/>
 
-        <input type="text" name="search" id="search" value={search} placeholder="Search By Name" onChange={handleSearchChange}/>
+        <label>Search by style: </label>
+        <input type="text" name="search" id="search" value={search} placeholder="Search By Name" onChange={handleStyleSearchChange}/>
 
 
-        <div className="col-10 offset-1 d-flex flex-wrap">
+        <div className="col-10 offset-1 d-flex flex-wrap justify-content-center">
              {allArtists.map(artist => {
                     return (
                         
-                            <div className="p-5">
+                            <div className="p-4">
                                 <Link to={`/${artist._id}/artist-profile`}>
                                   <img className="artist-image rounded border border-dark shadow" src={artist.profilePicture} style={{width: "300px", height: "400px"}}></img>
                                     <p> {artist.firstName} {artist.lastName}</p>
-                                </Link> 
+                                    </Link> 
+                                    <div className="d-flex flex-row align-items-center justify-content-center">
+                                    <p><strong>Style/s:  </strong></p>
+                                    {artist.tattooStyle.map(style => {
+                                        return (
+                                            <p> &nbsp; {style} | </p>
+                                        )
+                                    })}
+                                    </div>
                           
                         </div>
                     )

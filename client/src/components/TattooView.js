@@ -9,7 +9,8 @@ export default function TattooView(props) {
 
     const [showForm, setShowForm] = useState(false);
 
-    const showFormButton = () => {
+    const showFormButton = (e) => {
+    e.preventDefault();
     setShowForm(!showForm);
     }
 
@@ -58,7 +59,7 @@ export default function TattooView(props) {
 	}
 	useEffect(() => { 
 		getUserCollections();
-	}, [collections])
+	}, [])
     // make that dynamic (collections)
 
 
@@ -133,9 +134,9 @@ export default function TattooView(props) {
                         <button className="btn btn-success col-6" type="submit">Add</button>
                     </form>
 
-                    <form>
+                    {/* <form> */}
                     <button className="btn btn-primary col-6" onClick={showFormButton}>Create a new collection</button>
-                    </form>
+                    {/* </form> */}
                 
 
                     {showForm && ( 

@@ -100,9 +100,11 @@ export default function StudioShow(props) {
         }
 
     return (
+
         <div>
+
             <div className="row">
-            <div clssName="col-6">
+            <div className="col-6">
             <div className="sidebar">
             Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
             </div>
@@ -118,12 +120,8 @@ export default function StudioShow(props) {
                 <button type="submit" className="btn btn-primary">Join this studio</button>
             </form>
             </div>
-
-            <div className='col-6'> 
-
-
-            
             <h4>Artists at this studio</h4>
+            <div className="d-flex flex-wrap">
             {artists.map(artist => {
                     return (
                         
@@ -137,7 +135,13 @@ export default function StudioShow(props) {
                     )
                 })
              }
-            </div>
+             </div>
+
+      
+
+
+            
+         
             </div>
         </div>
     )

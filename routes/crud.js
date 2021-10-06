@@ -286,10 +286,15 @@ router.post('/:id/artist-profile/reviews', (req, res, next) => {
 
 
 // Delete review
-router.delete('/:id/artist-profile/reviews/:reviewId', (req, res, next) => {
+router.delete('/artist-profile/reviews/:reviewId', (req, res, next) => {
   const reviewId = req.params.reviewId
   console.log('thereviewid', reviewId)
   Review.findByIdAndDelete(reviewId)
+  .then(deletedReview => {
+    res.status(200).json(deletedReview)
+ 
+})
+.catch(err => next(err))
 })
 
 // Show Artist reviews's

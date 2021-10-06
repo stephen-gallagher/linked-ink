@@ -15,6 +15,35 @@ export default function ArtistProfile(props) {
     const [reviewAuthorUsername, setReviewAuthorUsername] = useState('')
     const [currentUser, setCurrentUser] = useState(null)
 
+
+    const [showArtistWork, setShowArtistWork] = useState(true);
+    const [showReviews, setShowReviews] = useState(false);
+    const [showBookingForm, setShowBookingForm] = useState(false);
+
+    const showArtistWorkButton = (e) => {
+        e.preventDefault();
+        setShowArtistWork(true);
+        setShowReviews(false);
+        setShowBookingForm(false);
+    }
+
+    const showReviewsButton = (e) => {
+        e.preventDefault();
+        setShowReviews(true);
+        setShowArtistWork(false);
+        setShowBookingForm(false);
+        }
+
+    const showBookingFormButton = (e) => {
+        e.preventDefault();
+        setShowReviews(false);
+        setShowArtistWork(false);
+        setShowBookingForm(true);
+        }
+
+
+
+
     const API_URL = 'http://localhost:5005'
 
     const getUser = () => {
@@ -64,7 +93,7 @@ export default function ArtistProfile(props) {
 	}
 	useEffect(() => { 
 		getProfileReviews();
-	}, [reviews])
+	}, [])
 
 
     const handleSubmit = (e) => {
@@ -81,7 +110,7 @@ export default function ArtistProfile(props) {
 
     const deleteReview = (id) => {
         console.log('this id', id)
-    axios.delete(`/api/crud/${props.match.params.id}/artist-profile/reviews/${id}`)
+    axios.delete(`/api/crud/artist-profile/reviews/${id}`)
 } 
     // const handleDeleteSubmit = (e) => {
 	// 	e.preventDefault();
@@ -118,11 +147,16 @@ export default function ArtistProfile(props) {
                                  </p>
 
                         </div>
-                        <button className="btn btn-success col-8 mb-2 mx-auto d-block">View work</button>          
-                        <button className="btn btn-success col-8 mb-2 mx-auto d-block">Reviews</button>          
-                        <button className="btn btn-success col-8 mb-2 mx-auto d-block">Booking form</button>          
+                        <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showArtistWorkButton}>View work</button>          
+                        <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showReviewsButton}>Reviews</button>          
+                        <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showBookingFormButton}>Booking form</button>          
                         
+
+                        </div>
             </div>
+
+            {showReviews && ( 
+            <div className="col-6 mt-3 card mb-3">
                 <h2>Leave a review!</h2>
                     <form className="mb-3" onSubmit={handleSubmit}>
                         <div className="mb-3 offset-4">  
@@ -178,8 +212,10 @@ export default function ArtistProfile(props) {
                 )
             })}
             </div>
+            )}
+            
           
-           {/* <div className="row"> */}
+            {showArtistWork && ( 
                 <div className="col-6 mt-3 card mb-3">
 
                 <h2>{user.firstName}'s tattoos</h2>
@@ -191,6 +227,7 @@ export default function ArtistProfile(props) {
                                         
                                             <img className="img-thumbnail img-fluid" src={tattoo.imageURL} style={{width:"220px", height:"220px"}}></img>                                        
                                         </Link>
+                                        
                                         </div>
                                     
                                 )
@@ -200,6 +237,7 @@ export default function ArtistProfile(props) {
 
   
             </div>
+            )}
  
 
         </div>

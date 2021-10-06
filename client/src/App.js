@@ -1,6 +1,7 @@
 
 import './App.css';
 import Navbar from './components/Navbar';
+import Explore from './pages/Explore';
 import Homepage from './pages/Homepage';
 import {useRef, useState} from 'react'
 import {Switch, Route} from 'react-router-dom';
@@ -44,6 +45,10 @@ function App(props) {
         <Route 
         exact path="/" 
         render={props => <Homepage setUser={addUser} {...props} user={user}/> }
+        />
+        <Route 
+        exact path="/explore" 
+        render={props => <Explore setUser={addUser} {...props} user={user}/> }
         />
         <Route 
           exact path="/signup" 
