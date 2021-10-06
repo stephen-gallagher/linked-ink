@@ -10,6 +10,29 @@ mapboxgl.accessToken = "pk.eyJ1Ijoic3RlcGhlbmdhbGxhZ2hlciIsImEiOiJja25mdmVwN2wxY
 
 export default function StudioShow(props) {
 
+
+    const [reviewText, setReviewText] = useState('')
+    const [rating, setRating] = useState(0)
+    const [reviews, setReviews] = useState([])
+    const [reviewArtist, setReviewArtist] = useState([])
+    const [reviewAuthorUsername, setReviewAuthorUsername] = useState('')
+
+    const [showArtists, setShowArtists] = useState(true);
+    const [showReviews, setShowReviews] = useState(false);
+
+    const showArtistsButton = (e) => {
+        e.preventDefault();
+        setShowArtists(true);
+        setShowReviews(false);
+    }
+
+    const showReviewsButton = (e) => {
+        e.preventDefault();
+        setShowArtists(false);
+        setShowReviews(true);
+        }
+    
+    
     // const mapContainer = React.createRef()
 
     const mapContainer = useRef(null);
@@ -19,7 +42,31 @@ export default function StudioShow(props) {
     const [zoom, setZoom] = useState(9);
 
  
+    const getProfileReviews =  () => {
+		// get request to the server
+		 axios.get(`/api/crud/studio/${props.match.params.id}/reviews`)
+			.then(response => {
+                console.log('reviews', response.data)
+				setReviewArtist(response.data);
+			})
+			.catch(err => console.log(err));
+	}
+	useEffect(() => { 
+		getProfileReviews();
+	}, [])
 
+
+    const handleReviewSubmit = (e) => {
+		e.preventDefault();
+         axios.post(`/api/crud/studio/${props.match.params.id}/reviews`, {reviewText, rating, reviewAuthorUsername})
+         .then(response => {
+             console.log('reviewData', response.data)
+			return response.data;
+		})
+		.catch(err => {
+			return err.response.data;
+		});
+    }
 
     const [name, setName] = useState('')
     const [location , setLocation] = useState('')
@@ -101,6 +148,12 @@ export default function StudioShow(props) {
             return <></>
         }
 
+
+        const deleteReview = (id) => {
+            console.log('this id', id)
+        axios.delete(`/api/crud/artist-profile/reviews/${id}`)
+    } 
+
     return (
 
         <div>
@@ -119,15 +172,15 @@ export default function StudioShow(props) {
             <div className="col-4 offset-1 mt-3 ml-1">
                 <div className="card mb-3">
                     
-                    <img src={imageURL} className="card-img-top rounded mx-auto d-block" style={{width:"250px"}}/>
-                    <h2>{name}</h2>
-                        <div className="card-body d-flex flex-column justify-content-start align-items-start">
-                            <h5>{location}</h5>
+                    <img src={imageURL} className="card-img-top rounded mx-auto d-block mt-3" style={{width:"250px"}}/>
+                    <h2 className="card-title">{name}</h2>
+                    <h5>{location}</h5>
+                        <div className="card-body d-flex flex-column justify-content-start align-items-start p-5">
+                            
                             <p><strong>About:</strong> {description}</p>
                         </div>
-                        {/* <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showArtistWorkButton}>View work</button>          
-                        <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showReviewsButton}>Reviews</button>          
-                        <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showBookingFormButton}>Booking form</button>           */}
+                        <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showArtistsButton}>Artists at the studio</button>          
+                        <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showReviewsButton}>Reviews</button> 
                         
 
                         </div>
@@ -143,12 +196,14 @@ export default function StudioShow(props) {
                 <button type="submit" className="btn btn-primary">Join this studio</button>
             </form>
             </div> */}
+
+            {showArtists && ( 
             <div className="col-6 card mt-3 mb-3">
             <h4>Artists at this studio</h4>
             <form onSubmit={handleSubmit}>
                 <button type="submit" className="btn btn-primary">Join this studio</button>
             </form>
-            <div className="d-flex flex-wrap">
+            <div className="d-flex flex-wrap align-items-center justify-content-center">
         
             {artists.map(artist => {
                     return (
@@ -165,7 +220,67 @@ export default function StudioShow(props) {
              }
              </div>
              </div>
+            )}
 
+
+            {showReviews && ( 
+            <div className="col-6 mt-3 card mb-3">
+                <h2 className="mt-4">LEAVE A REVIEW</h2>
+                    <form className="mb-3" onSubmit={handleReviewSubmit}>
+                        <div className="mb-3 offset-4">  
+                            <fieldset className="starability-fade">
+                    w        <legend>Rating:</legend>
+                            <input type="radio" id="no-rate" className="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+                            <input type="radio" id="first-rate1" name="review[rating]" value="1" onChange={e => setRating(e.target.value)}/>
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="review[rating]" value="2" onChange={e => setRating(e.target.value)}/>
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="review[rating]" value="3" onChange={e => setRating(e.target.value)}/>
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="review[rating]" value="4" onChange={e => setRating(e.target.value)}/>
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="review[rating]" value="5" onChange={e => setRating(e.target.value)}/>
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                            </fieldset>
+
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label" htmlFor="body">Your review:</label>
+                            <textarea 
+                            className= "form-control" 
+                            name="review[body]" 
+                            cols="30" 
+                            rows="3" 
+                            value={reviewText}
+                            onChange={e => setReviewText(e.target.value)}
+                            required>
+
+                            </textarea>
+                        </div>
+                        <button className="btn btn-success col-6" type="submit">Submit your review</button>
+                    </form>
+            {reviewArtist.map(review => {
+                return (
+                    <div className="card col-10 align-content-center mb-3 d-flex flex-column justify-content-center align-items-center">
+                        <div className="card-body">
+                            <h5 className="card-title">Username: {review.reviewAuthorUsername}</h5>
+                                <p class="starability-result" data-rating={`${review.rating}`}>
+                                    Rated: {`${review.rating}`} stars
+                                </p>
+                            <p className="card-text">Review: {review.reviewText}</p>
+                            
+                            
+                            {/* ({review.reviewAuthor} === {currentUser._id} ?  */}
+                                <button onClick={() => {
+                                    deleteReview(review._id)
+                                    }} className="btn btn-sm btn-danger">Delete</button>
+                            
+                        </div>
+                    </div>
+                )
+            })}
+            </div>
+            )}
       
 
 

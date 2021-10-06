@@ -14,6 +14,7 @@ const Collection = require("../models/Collection")
 
 const fileUploader = require("../config/cloudinary");
 const { response } = require("express");
+const { populate } = require("../models/User");
 
 router.post("/upload", fileUploader.single("imageURL"), (req, res, next) => {
 
@@ -87,6 +88,23 @@ Collection.findOneAndUpdate({creator: `${req.session.user._id}`, title: `${selec
   }) 
 }
 })
+
+// add appointment to the user
+router.put('/:id/appointments', (req, res, next) => {
+  const{date, time, location, artist, price} = req.body
+  console.log('body', req.body)
+  if(req.session.user){
+  User.findByIdAndUpdate(req.session.user._id, { $push: {myAppointments: {date, time, location, artist, price}} })
+    .then(collectionFromDB => {
+      // console.log('this is the collection', collectionFromDB)
+      res.status(200).json(collectionFromDB);
+    })
+    .catch((err) => {
+      next(err);
+  
+    }) 
+  }
+  })
 
 // add artist to studio and studio to artist
 router.put('/studio/:id', (req, res, next) => {
@@ -223,6 +241,7 @@ router.get('/:id/artist-profile/user', async (req, res, next) => {
     });
 });
 
+
 // Show Artist tatooo's
 router.get('/:id/artist-profile',  (req,res,next) => {
      Tattoo.find({artist: req.params.id})
@@ -259,8 +278,56 @@ router.get('/user/collections', (req,res,next) => {
 })
 
 
+// get user appointments
+router.get('/user/appointments', (req,res,next) => {
+  User.findById(req.session.user._id)
+  .populate({
+    path: 'myAppointments',
+    populate: {
+      path: 'artist',
+    }, 
+  })
+  .populate({
+    path: 'myAppointments',
+    populate: {
+      path: 'location',
+    }
+  })
+  .then(appointments => {
+      res.status(200).json(appointments)
+   
+  })
+  .catch(err => next(err))
+})
+
+
 // create review on artist page
 router.post('/:id/artist-profile/reviews', (req, res, next) => {
+  const {reviewText, rating} = req.body
+  User.findById(req.params.id)
+  .then(artist => {
+    Review.create({
+      reviewText: reviewText, 
+      rating: rating,
+      reviewArtist: req.params.id,
+      reviewAuthor: req.session.user._id,
+      reviewAuthorUsername: req.session.user.username
+    })
+    .then(createdReview => {
+      artist.reviews.push(createdReview)
+      artist.save()
+    })
+  .catch(err => {
+    next(err);
+  })
+  .catch(err => {
+      console.log(err);
+  })
+  }) 
+})
+
+// create review on artist page
+router.post('/studio/:id/reviews', (req, res, next) => {
   const {reviewText, rating} = req.body
   User.findById(req.params.id)
   .then(artist => {
@@ -306,6 +373,17 @@ router.get('/:id/artist-profile/reviews', async (req,res,next) => {
   })
   .catch(err => next(err))
 })
+
+// Show studion reviews's
+router.get('/studio/:id/reviews', async (req,res,next) => {
+  await Review.find({reviewArtist: req.params.id})
+  .then(reviews => {
+      res.status(200).json(reviews)
+   
+  })
+  .catch(err => next(err))
+})
+
 
 
   module.exports = router;

@@ -39,9 +39,17 @@ const userSchema = new Schema({
     ],
     myAppointments: [
       {
-        date: Date,
-        Cost: Number,
-        location: String,
+        date: String,
+        time: String,
+        Price: String,
+        location: {
+            type: Schema.Types.ObjectId,
+            ref: "Studio"
+        },
+        artist: {
+          type: Schema.Types.ObjectId,
+          ref: "User"
+        },
       }
     ],
     reviews: [

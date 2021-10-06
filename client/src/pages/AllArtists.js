@@ -12,7 +12,8 @@ export default function AllArtists() {
 
 
     const [allArtists, setAllArtists] = useState([]);
-    const [search, setSearch] = useState('')
+    const [nameSearch, setNameSearch] = useState('')
+    const [styleSearch, setStyleSearch] = useState('')
 
     const getAllArtists = () => {
 		// get request to the server
@@ -30,9 +31,9 @@ export default function AllArtists() {
 
     const handleNameSearchChange = event => {
         event.preventDefault()
-        setSearch(event.target.value)
+        setNameSearch(event.target.value)
         let newList = allArtists.filter((artist) => {
-          return `${artist.firstName}${artist.lastName}`.toLowerCase().includes(search.toLowerCase())
+          return `${artist.firstName}${artist.lastName}`.toLowerCase().includes(nameSearch.toLowerCase())
         })
         setAllArtists(newList)
       }
@@ -43,9 +44,9 @@ export default function AllArtists() {
 
     const handleStyleSearchChange = event => {
         event.preventDefault()
-        setSearch(event.target.value)
+        setStyleSearch(event.target.value)
         let newList = allArtists.filter((artist) => {
-          return `${artist.tattooStyle}`.toLowerCase().includes(search.toLowerCase())
+          return `${artist.tattooStyle}`.toLowerCase().includes(styleSearch.toLowerCase())
         })
         setAllArtists(newList)
       }
@@ -59,15 +60,19 @@ export default function AllArtists() {
         <div className='mt-5'>
         <h1>Find an Artist</h1>
         <div className="col-6 offset-3">
-        <h4>Browse through the list of our registered artist to find the perfect match for your next tattoo idea. Click on the image below to view their profile</h4>
+        <h4>Browse through the list of our registered artists to find the perfect match for your next tattoo idea. Click on the image below to view their profile</h4>
         </div>
         
-        <label>Search by name: </label>
-        <input type="text" name="search" id="search" value={search} placeholder="e.g Traditional" onChange={handleNameSearchChange}/>
-
-        <label>Search by style: </label>
-        <input type="text" name="search" id="search" value={search} placeholder="Search By Name" onChange={handleStyleSearchChange}/>
-
+        <div className="d-flex p5 justify-content-center align-items-center ">
+        <div className="p5">
+        <label>Search by name:&nbsp; </label>
+        <input type="text" name="search" id="search" value={nameSearch} placeholder="e.g John Smith" onChange={handleNameSearchChange}/>
+        </div>
+        <div>
+        <label>Search by style: &nbsp;</label>
+        <input type="text" name="search" id="search" value={styleSearch} placeholder="e.g Traditional" onChange={handleStyleSearchChange}/>
+      </div>
+      </div>
 
         <div className="col-10 offset-1 d-flex flex-wrap justify-content-center">
              {allArtists.map(artist => {
