@@ -24,18 +24,13 @@ import CollectionView from './components/CollectionView';
 function App(props) {
 
 
-  const [user, setUser] = useState()
-  const [artist,setArtist] = useState()
+  const [user, setUser] = useState(props.user)
 
   const addUser = user => {
     setUser(user)
   }
   console.log('user: ',user)
-  console.log('artist: ', artist)
 
-  // const addArtist = artist => {
-  //   setArtist(artist)
-  // }
 
   return (
     <div className="App d-flex flex-column vh-100">

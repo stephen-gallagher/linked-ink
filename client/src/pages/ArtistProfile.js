@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useEffect } from 'react';
 import '../Starability.css'
 import {Link} from 'react-router-dom'
+import service from '../api/service'
 
 export default function ArtistProfile(props) {
     const [user, setUser] = useState(null)
@@ -14,6 +15,12 @@ export default function ArtistProfile(props) {
     const [reviewArtist, setReviewArtist] = useState([])
     const [reviewAuthorUsername, setReviewAuthorUsername] = useState('')
     const [currentUser, setCurrentUser] = useState(null)
+
+
+    const [bodyPart, setBodyPart] = useState('')
+    const [tattooSize, setTattooSize] = useState('')
+    const [tattooDescription, setTattooDescription] = useState('')
+    const [referenceImage, setReferenceImage] = useState('')
 
 
     const [showArtistWork, setShowArtistWork] = useState(true);
@@ -112,18 +119,25 @@ export default function ArtistProfile(props) {
         console.log('this id', id)
     axios.delete(`/api/crud/artist-profile/reviews/${id}`)
 } 
-    // const handleDeleteSubmit = (e) => {
-	// 	e.preventDefault();
-    //     fetchData()
-    //      axios.delete(`/api/crud/${props.match.params.id}/artist-profile/reviews/reviewID`, {reviewText, rating})
-    //      .then(response => {
-    //          console.log('data', response.data)
-	// 		return response.data;
-	// 	})
-	// 	.catch(err => {
-	// 		return err.response.data;
-	// 	});
-    // }
+
+
+
+const handleFileUpload = (e) => {
+    // const uploadData = new FormData()
+console.log("The file to be uploaded is: ", e.target.files[0]);
+
+    const uploadData = new FormData();
+
+    uploadData.append("imageURL", e.target.files[0])
+
+    service
+        .handleUpload(uploadData)
+        .then(response => {
+            setReferenceImage(response.secure_url)
+        })
+        .catch(err => console.log("Error when uploading the file: ", err))
+};
+
 	if(user === null){
 		return<></>
 	}
@@ -134,7 +148,7 @@ export default function ArtistProfile(props) {
                 <div className="card mb-3">
                     <h1>{user.firstName}'s profile</h1>
                     <img src={user.profilePicture} className="card-img-top rounded mx-auto d-block" style={{width:"200px"}}/>
-                        <div className="card-body">
+                        <div className="card-body d-flex flex-column justify-content-start align-items-start offset-3">
                             <p><strong>Name:</strong> {user.firstName} {user.lastName}</p>
                             <p><strong>Bio:</strong> {user.aboutMe}</p>
                             <p><strong>Tattoo Style/s:</strong> {user.tattooStyle.map(style => {
@@ -156,12 +170,12 @@ export default function ArtistProfile(props) {
             </div>
 
             {showReviews && ( 
-            <div className="col-6 mt-3 card mb-3">
-                <h2>Leave a review!</h2>
+            <div className="col-6 mt-3 card mb-3 bg-secondary bg-gradient">
+                <h2 className="mt-4 text-white">LEAVE A REVIEW</h2>
                     <form className="mb-3" onSubmit={handleSubmit}>
                         <div className="mb-3 offset-4">  
                             <fieldset className="starability-fade">
-                            <legend>Rating:</legend>
+                            <legend className="text-white">Rating:</legend>
                             <input type="radio" id="no-rate" className="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
                             <input type="radio" id="first-rate1" name="review[rating]" value="1" onChange={e => setRating(e.target.value)}/>
                             <label for="first-rate1" title="Terrible">1 star</label>
@@ -177,7 +191,7 @@ export default function ArtistProfile(props) {
 
                         </div>
                         <div className="mb-3">
-                            <label className="form-label" htmlFor="body">Your review:</label>
+                            <label className="form-label text-white" htmlFor="body">Your review:</label>
                             <textarea 
                             className= "form-control" 
                             name="review[body]" 
@@ -193,7 +207,7 @@ export default function ArtistProfile(props) {
                     </form>
             {reviewArtist.map(review => {
                 return (
-                    <div className="card mb-3">
+                    <div className="card col-10 align-content-center mb-3 d-flex flex-column justify-content-center align-items-center">
                         <div className="card-body">
                             <h5 className="card-title">Username: {review.reviewAuthorUsername}</h5>
                                 <p class="starability-result" data-rating={`${review.rating}`}>
@@ -237,6 +251,71 @@ export default function ArtistProfile(props) {
 
   
             </div>
+            )}
+
+
+            {showBookingForm && ( 
+            <div className="col-6">
+						<div className="card shadow mt-3">
+							<img src="/tattoo-images/tattoo-arm-4.jpg" alt="tattoo-girl"className="card-img-top"></img>
+							<div className="card-body">
+								<h3 className="card-title">Send a booking request</h3>
+				<form onSubmit={handleSubmit}>
+					<div className="mb-3">
+						<label className="form-label" htmlFor="username">Where do you want the tattoo? </label>
+						<input
+							className="form-control"
+							type="text"
+							name="bodyPart"
+							value={bodyPart}
+							required
+							autoFocus
+							onChange={e => setBodyPart(e.target.value)}
+						/>
+					</div>
+
+					<div className="mb-3">
+						<label className="form-label" htmlFor="tattooSize">Roughly what size would you like it? </label>
+						<input
+							className="form-control"
+							type="text"
+							name="size"
+							value={tattooSize}
+							required
+							onChange={e => setTattooSize(e.target.value)}
+						/>
+					</div>
+                    <div className="mb-3">
+						<label className="form-label" htmlFor="tattooDescription">Describe your idea </label>
+						<input
+							className="form-control"
+							type="text-area"
+							name="size"
+							value={tattooDescription}
+							required
+							onChange={e => setTattooDescription(e.target.value)}
+						/>
+					</div>
+                    <div className="mb-3">
+						<label className="form-label" htmlFor="profilePicture">Add reference images </label>
+						<input 
+							className="form-control"
+							type="file"
+							name="rerefenceImage"
+							onChange={handleFileUpload}
+							/>
+							{referenceImage && <img src={referenceImage} alt="" style={{ height: '200px' }} />}
+					</div>
+                    <div className="mb-3">
+						<button className="btn btn-success btn-block col-12" type="submit">Send request</button>
+					</div>
+					{/* {message && (
+					<h3>{message}</h3>
+				)} */}
+				</form>
+				</div>
+				</div>
+				</div>
             )}
  
 

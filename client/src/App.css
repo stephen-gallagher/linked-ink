@@ -86,3 +86,7 @@
   object-fit: cover; /* Do not scale the image */
   width: 100%;
 }
+
+li {
+  list-style-type: none;
+}

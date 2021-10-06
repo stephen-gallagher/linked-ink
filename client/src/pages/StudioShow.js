@@ -25,6 +25,7 @@ export default function StudioShow(props) {
     const [location , setLocation] = useState('')
     const [description, setDescription] = useState('')
     const [artists, setArtists] = useState([])
+    const [imageURL, setImageURL]  = useState('')
 
     // const [geometry, setGeometry] = useState({})
 
@@ -36,6 +37,7 @@ export default function StudioShow(props) {
                 setName(response.data[0].name)
                 setLocation(response.data[0].location)
                 setDescription(response.data[0].description)
+                setImageURL(response.data[0].imageURL)
                 setLng(response.data[0].geometry.coordinates[0])
                 setLat(response.data[0].geometry.coordinates[1])
                 // setGeometry(response.data[0].geometry)
@@ -67,7 +69,7 @@ export default function StudioShow(props) {
         if(lng !==0 ){
         map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/streets-v11',
+        style: 'mapbox://styles/stephengallagher/ckufe62dp408217mvz6kmroo5',
         center: [lng, lat],
         zoom: 14
         });
@@ -103,31 +105,57 @@ export default function StudioShow(props) {
 
         <div>
 
-            <div className="row">
-            <div className="col-6">
+            
+            {/* <div className="col-6"> */}
             <div className="sidebar">
-            Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-            </div>
-                <div ref={mapContainer} className="mapContainer" style={{height:"300px", width:"300px"}}/>
+            {/* </div> */}
+                <div ref={mapContainer} className="mapContainer" style={{height:"200px"}}/>
             </div>
            
-            
-            <div className="col-6">
+            <div className="row">
+
+
+
+            <div className="col-4 offset-1 mt-3 ml-1">
+                <div className="card mb-3">
+                    
+                    <img src={imageURL} className="card-img-top rounded mx-auto d-block" style={{width:"250px"}}/>
+                    <h2>{name}</h2>
+                        <div className="card-body d-flex flex-column justify-content-start align-items-start">
+                            <h5>{location}</h5>
+                            <p><strong>About:</strong> {description}</p>
+                        </div>
+                        {/* <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showArtistWorkButton}>View work</button>          
+                        <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showReviewsButton}>Reviews</button>          
+                        <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showBookingFormButton}>Booking form</button>           */}
+                        
+
+                        </div>
+            </div>
+
+
+
+            {/* <div className="col-6">
             <h1>{name}</h1>
             <h2>{location}</h2>
             <p>{description}</p>
             <form onSubmit={handleSubmit}>
                 <button type="submit" className="btn btn-primary">Join this studio</button>
             </form>
-            </div>
+            </div> */}
+            <div className="col-6 card mt-3 mb-3">
             <h4>Artists at this studio</h4>
+            <form onSubmit={handleSubmit}>
+                <button type="submit" className="btn btn-primary">Join this studio</button>
+            </form>
             <div className="d-flex flex-wrap">
+        
             {artists.map(artist => {
                     return (
                         
-                            <div className="p-5">
+                            <div className="p-2">
                                 <Link to={`/${artist._id}/artist-profile`}>
-                                  <img className="artist-image rounded border border-dark shadow" src={artist.profilePicture} style={{width: "200px", height: "300px"}}></img>
+                                  <img className="artist-image rounded border border-dark shadow" src={artist.profilePicture} style={{width: "150px", height: "250px"}}></img>
                                     <p> {artist.firstName} {artist.lastName}</p>
                                 </Link> 
                           
@@ -135,6 +163,7 @@ export default function StudioShow(props) {
                     )
                 })
              }
+             </div>
              </div>
 
       

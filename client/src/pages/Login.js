@@ -19,7 +19,6 @@ export default function Login(props) {
 
 		login(username, password)
 			.then(response => {
-				console.log('hey', response);
 				if (response.message) {
 					// reset the form 
 					setUsername('');
