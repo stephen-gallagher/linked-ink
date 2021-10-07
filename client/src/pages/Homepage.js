@@ -35,21 +35,6 @@ export default function Homepage(props) {
                     <Link to="/signup">Sign up</Link>
                 </div>
 
-                <div className="col-12 d-flex flex-wrap">
-                {tattoos.map(tattoo => {
-                    return (
-                        
-                            <div className="p-2">
-                                {/* <Link to={`/${artist._id}/artist-profile`}> */}
-                                  <img className="artist-image rounded border border-dark shadow" src={tattoo.imageURL} style={{width: "330px", height: "330px"}}></img>
-                                    {/* <p> {artist.firstName} {artist.lastName}</p> */}
-                                {/* </Link>  */}
-                          
-                        </div>
-                    )
-                })
-             }
-             </div>
                
             </div>
         </div>
