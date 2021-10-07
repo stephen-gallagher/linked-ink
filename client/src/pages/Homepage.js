@@ -27,10 +27,10 @@ export default function Homepage(props) {
         <div>
       
             <div>
-                <img src="/tattoo-images/tattoo-head-2"></img>
+                <img className="w-100"src="/tattoo-images/tattoo-machine-2.png" style={{vw:'100'}}></img>
                 <h1>Find and book your new tattoo</h1>
             </div>
-            <div>
+            <div classname="d-flex position-absolute">
                 <h1>I am...</h1>
                 <div>
                     <Link to="/signup">Sign up</Link>
