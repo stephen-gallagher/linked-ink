@@ -228,8 +228,8 @@ router.get('/all-studios', (req, res, next) => {
 
 
 // get current user
-router.get('/users', async (req, res, next) => {
-  await User.findById(req.session.user._id)
+router.get('/users', (req, res, next) => {
+   User.findById(req.session.user._id)
     .then((userFromDB) => {
       res.status(200).json(userFromDB);
     })
@@ -239,9 +239,9 @@ router.get('/users', async (req, res, next) => {
 });
 
   // create new Studio
-router.post('/new-studio', async (req, res, next) => {
+router.post('/new-studio', (req, res, next) => {
   console.log('hello')
-  const geoData = await geocoder.forwardGeocode({
+  const geoData =  geocoder.forwardGeocode({
     query: req.body.location,
     limit: 1
   }).send()
@@ -274,8 +274,8 @@ router.get('/studio/:id', (req,res,next) => {
 })
 
 // get artist profile
-router.get('/:id/artist-profile/user', async (req, res, next) => {
-  await User.findById(req.params.id)
+router.get('/:id/artist-profile/user', (req, res, next) => {
+   User.findById(req.params.id)
     .then((artistFromDB) => {
       res.status(200).json(artistFromDB);
     })
@@ -308,8 +308,8 @@ router.get('/:id/artist-profile',  (req,res,next) => {
 
 
 // get specific user collection
-router.get('/collections/:id', async (req, res, next) => { 
-await Collection.findById(req.params.id)
+router.get('/collections/:id', (req, res, next) => { 
+ Collection.findById(req.params.id)
 .populate("tattoos")
 .then(collection => {
   console.log('the collection', collection)
@@ -469,8 +469,8 @@ router.delete('/user-dashboard/appointments/:date', (req, res, next) => {
 })
 
 // Show Artist reviews's
-router.get('/:id/artist-profile/reviews', async (req,res,next) => {
-  await Review.find({reviewArtist: req.params.id})
+router.get('/:id/artist-profile/reviews', (req,res,next) => {
+   Review.find({reviewArtist: req.params.id})
   .then(reviews => {
       res.status(200).json(reviews)
    
@@ -479,8 +479,8 @@ router.get('/:id/artist-profile/reviews', async (req,res,next) => {
 })
 
 // Show studion reviews's
-router.get('/studio/:id/reviews', async (req,res,next) => {
-  await Review.find({reviewArtist: req.params.id})
+router.get('/studio/:id/reviews', (req,res,next) => {
+   Review.find({reviewArtist: req.params.id})
   .then(reviews => {
       res.status(200).json(reviews)
    
