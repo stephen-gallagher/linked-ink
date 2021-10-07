@@ -10,7 +10,7 @@ export default function Homepage(props) {
 
     const getAllTattoos = () => {
 		// get request to the server
-		axios.get(`$/api/crud`)
+		axios.get(`/api/crud`)
 			.then(response => {
 				console.log(response.data)
 				setTattoos(response.data);
