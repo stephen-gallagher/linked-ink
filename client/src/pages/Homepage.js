@@ -27,6 +27,7 @@ export default function Homepage(props) {
         <div>
       
             <div>
+                <img src="/tattoo-images/tattoo-head-2"></img>
                 <h1>Find and book your new tattoo</h1>
             </div>
             <div>
