@@ -198,10 +198,13 @@ export default function StudioShow(props) {
             </div> */}
 
             {showArtists && ( 
-            <div className="col-6 card mt-3 mb-3">
+            <div className="col-6 mt-3 mb-3">
+            <div className="card">
+            <div className="bg-dark col-12 text-white p-2 rounded">
             <h4>Artists at this studio</h4>
+            </div>
             <form onSubmit={handleSubmit}>
-                <button type="submit" className="btn btn-primary">Join this studio</button>
+                <button type="submit" className="btn btn-primary mt-3">Join this studio</button>
             </form>
             <div className="d-flex flex-wrap align-items-center justify-content-center">
         
@@ -218,6 +221,7 @@ export default function StudioShow(props) {
                     )
                 })
              }
+             </div>
              </div>
              </div>
             )}
@@ -285,8 +289,9 @@ export default function StudioShow(props) {
 
 
             
-         
             </div>
+
+            
         </div>
     )
 }

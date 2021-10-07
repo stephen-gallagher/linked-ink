@@ -87,7 +87,7 @@ export default function AllArtists() {
                                     <p><strong>Style/s:  </strong></p>
                                     {artist.tattooStyle.map(style => {
                                         return (
-                                            <p> &nbsp; {style} | </p>
+                                            <p> &nbsp; {style}. </p>
                                         )
                                     })}
                                     </div>

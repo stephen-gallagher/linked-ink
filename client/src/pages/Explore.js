@@ -5,16 +5,15 @@ import axios from 'axios'
 
 export default function Homepage(props) {
 
-    const API_URL = 'http://localhost:5005'
 
     const [tattoos, setTattoos] = useState([])
     const [search, setSearch] = useState('')
 
     const getAllTattoos = () => {
 		// get request to the server
-		axios.get(`${API_URL}/api/crud`)
+		axios.get(`/api/crud/tattoos`)
 			.then(response => {
-				console.log(response.data)
+				console.log('tattoos', response.data)
 				setTattoos(response.data);
 			})
 			.catch(err => console.log(err));

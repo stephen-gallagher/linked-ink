@@ -140,7 +140,7 @@ router.get('/studios/:id',  (req,res,next) => {
 
 
 // all tattoos
-router.get('/', (req, res, next) => {
+router.get('/tattoos', (req, res, next) => {
     Tattoo.find()
       .then((tattoosFromDB) => {
         res.status(200).json(tattoosFromDB);
@@ -230,11 +230,22 @@ router.get('/studio/:id', (req,res,next) => {
   .catch(err => next(err))
 })
 
-// get user profile
+// get artist profile
 router.get('/:id/artist-profile/user', async (req, res, next) => {
   await User.findById(req.params.id)
     .then((artistFromDB) => {
       res.status(200).json(artistFromDB);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+// get user profile
+router.get('/:id/user-dashboard', (req, res, next) => {
+   User.findById(req.params.id)
+    .then((userFromDB) => {
+      res.status(200).json(userFromDB);
     })
     .catch((err) => {
       next(err);
@@ -351,6 +362,17 @@ router.post('/studio/:id/reviews', (req, res, next) => {
   }) 
 })
 
+// edit user styles and profile picture
+router.put('/:id/edit-user', (req, res, next) => {
+	const { favouriteStyles, profilePicture } = req.body;
+	User.findByIdAndUpdate(req.params.id, { favouriteStyles: favouriteStyles, profilePicture: profilePicture }, { new: true })
+		.then(updatedUser => {
+			res.status(200).json(updatedUser);
+		})
+		.catch(err => next(err));
+});
+
+
 
 // Delete review
 router.delete('/artist-profile/reviews/:reviewId', (req, res, next) => {
@@ -362,6 +384,36 @@ router.delete('/artist-profile/reviews/:reviewId', (req, res, next) => {
  
 })
 .catch(err => next(err))
+})
+
+// Delete collection
+router.delete('/user-dashboard/collections/:id', (req, res, next) => {
+  const collectionId = req.params.id
+  console.log('theCollectionID', collectionId)
+  Collection.findByIdAndDelete(collectionId)
+  .then(deletedReview => {
+    res.status(200).json(deletedReview)
+ 
+})
+.catch(err => next(err))
+})
+
+
+// Delete appointment
+router.delete('/user-dashboard/appointments/:date', (req, res, next) => {
+  const appointmentDate = req.params.date
+  console.log('theAppointment', appointmentDate)
+  if(req.session.user){
+    User.findByIdAndUpdate(req.session.user._id, { $pull: {myAppointments: {date: `${appointmentDate}`}} })
+      .then(collectionFromDB => {
+        // console.log('this is the collection', collectionFromDB)
+        res.status(200).json(collectionFromDB);
+      })
+      .catch((err) => {
+        next(err);
+    
+      }) 
+    }
 })
 
 // Show Artist reviews's

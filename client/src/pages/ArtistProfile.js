@@ -15,6 +15,7 @@ export default function ArtistProfile(props) {
     const [reviewArtist, setReviewArtist] = useState([])
     const [reviewAuthorUsername, setReviewAuthorUsername] = useState('')
     const [currentUser, setCurrentUser] = useState(null)
+    const [message, setMessage] = useState('');
 
 
     const [bodyPart, setBodyPart] = useState('')
@@ -26,12 +27,19 @@ export default function ArtistProfile(props) {
     const [showArtistWork, setShowArtistWork] = useState(true);
     const [showReviews, setShowReviews] = useState(false);
     const [showBookingForm, setShowBookingForm] = useState(false);
+    const [showImageUploadForm, setShowImageUploadForm] = useState(false);
+
+
+    const [imageURL, setImageURL] = useState('')
+    const [caption, setCaption] = useState('')
+    const [tags, setTags] = useState('')
 
     const showArtistWorkButton = (e) => {
         e.preventDefault();
         setShowArtistWork(true);
         setShowReviews(false);
         setShowBookingForm(false);
+        setShowImageUploadForm(false);
     }
 
     const showReviewsButton = (e) => {
@@ -39,6 +47,7 @@ export default function ArtistProfile(props) {
         setShowReviews(true);
         setShowArtistWork(false);
         setShowBookingForm(false);
+        setShowImageUploadForm(false);
         }
 
     const showBookingFormButton = (e) => {
@@ -46,12 +55,17 @@ export default function ArtistProfile(props) {
         setShowReviews(false);
         setShowArtistWork(false);
         setShowBookingForm(true);
+        setShowImageUploadForm(false);
         }
 
+    const showImageUploadFormButton = (e) => {
+        e.preventDefault();
+        setShowImageUploadForm(true);
+        setShowReviews(false);
+        setShowArtistWork(false);
+        setShowBookingForm(false);
+        }
 
-
-
-    const API_URL = 'http://localhost:5005'
 
     const getUser = () => {
          axios.get(`/api/crud/${props.match.params.id}/artist-profile/user`)
@@ -107,6 +121,9 @@ export default function ArtistProfile(props) {
 		e.preventDefault();
          axios.post(`/api/crud/${props.match.params.id}/artist-profile/reviews`, {reviewText, rating, reviewAuthorUsername})
          .then(response => {
+            setReviewText('')
+            setRating(0)
+            setMessage('Your review has been posted!')
 			return response.data;
             // props.history.push(`/${user._id}/artist-profile`)
 		})
@@ -121,6 +138,11 @@ export default function ArtistProfile(props) {
 } 
 
 
+const handleTagChange = e => {
+    const tags = e.target.value 
+    let split = tags.split(',')
+    setTags(split)
+}
 
 const handleFileUpload = (e) => {
     // const uploadData = new FormData()
@@ -133,17 +155,36 @@ console.log("The file to be uploaded is: ", e.target.files[0]);
     service
         .handleUpload(uploadData)
         .then(response => {
-            setReferenceImage(response.secure_url)
-        })
+            console.log('the uploaded image', response.secure_url)
+            setImageURL(response.secure_url)		
+        	})
         .catch(err => console.log("Error when uploading the file: ", err))
 };
+
+const handleImageUploadSubmit = e => {
+    e.preventDefault();
+    service
+    .saveNewTattoo(imageURL, caption, tags )
+    .then (response => {
+        console.log('great response', response)
+        setImageURL(response.imageURL)
+    })
+    .catch(err => console.log(err))
+    axios.post('/api/crud/tattoos/create', {imageURL, caption, tags})
+    .then(response => {
+        return response.data;
+    })
+    .catch(err => {
+        return err.response.data;
+    });
+}
 
 	if(user === null){
 		return<></>
 	}
     return (
         <>
-        <div className="row">
+        <div className="row bg-gradient">
             <div className="col-4 offset-1 mt-3 ml-1">
                 <div className="card mb-3">
                     <h1>{user.firstName}'s profile</h1>
@@ -164,13 +205,14 @@ console.log("The file to be uploaded is: ", e.target.files[0]);
                         <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showArtistWorkButton}>View work</button>          
                         <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showReviewsButton}>Reviews</button>          
                         <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showBookingFormButton}>Booking form</button>          
+                        <button className="btn btn-success col-8 mb-2 mx-auto d-block" onClick={showImageUploadFormButton}>Upload an image</button>          
                         
 
                         </div>
             </div>
 
             {showReviews && ( 
-            <div className="col-6 mt-3 card mb-3 bg-secondary bg-gradient">
+            <div className="col-6 mt-3 card mb-3">
                 <h2 className="mt-4 text-white">LEAVE A REVIEW</h2>
                     <form className="mb-3" onSubmit={handleSubmit}>
                         <div className="mb-3 offset-4">  
@@ -203,11 +245,16 @@ console.log("The file to be uploaded is: ", e.target.files[0]);
 
                             </textarea>
                         </div>
+                        <div>
                         <button className="btn btn-success col-6" type="submit">Submit your review</button>
+                        </div>
+                        {message && (
+						<h3>{message}</h3>
+				)}
                     </form>
             {reviewArtist.map(review => {
                 return (
-                    <div className="card col-10 align-content-center mb-3 d-flex flex-column justify-content-center align-items-center">
+                    <div className="card align-content-center mb-3 d-flex flex-column justify-content-center align-items-center">
                         <div className="card-body">
                             <h5 className="card-title">Username: {review.reviewAuthorUsername}</h5>
                                 <p class="starability-result" data-rating={`${review.rating}`}>
@@ -316,6 +363,47 @@ console.log("The file to be uploaded is: ", e.target.files[0]);
 				</div>
 				</div>
 				</div>
+            )}
+
+
+            {showImageUploadForm && (
+
+                <div className='col-6'>
+            <div>
+            <h1 className="text-center">New image</h1>
+            <div>
+            <form onSubmit={handleImageUploadSubmit}>
+            <label className="form-label" htmlFor="image">Upload your work: </label>
+					<input 
+                        className="form-control"
+						type="file"
+						name="imageURL"
+						onChange={handleFileUpload}
+						/>
+                        {imageURL && <img src={imageURL} alt="" style={{ height: '200px' }} />}
+                    <label className="form-label" htmlFor="caption">Caption: </label>
+					<input
+                        className="form-control"
+						type="text"
+						name="caption"
+						value={caption}
+						onChange={e => setCaption(e.target.value)}
+					/>
+                    <label className="form-label" htmlFor="tags">Tags (separate each tag with a comma): </label>
+                    <input
+                        className="form-control"
+						type="text"
+						name="tags"
+						// value={tags}
+						onChange={handleTagChange}
+					/>
+                     <button className="btn btn-success btn-block col-5" type="submit">Upload ✍️</button>
+                        </form>
+                        </div>
+                        </div>
+
+        </div>
+
             )}
  
 

@@ -133,7 +133,7 @@ export default function Signup(props) {
 	  ]
 
 	return (
-		<div className="signupPage">
+		<div className="signupPage mt-5">
 			<h3>I am...</h3>
 			<div className="d-flex justify-content-center">
 				<h4>A tattoo artist</h4>
@@ -149,60 +149,60 @@ export default function Signup(props) {
 							<img src="/tattoo-images/tattoo-group-1.jpeg" alt="tattoo-girl"className="card-img-top"></img>
 							<div className="card-body">
 								<h5 className="card-title">Enter your details here</h5>
-				<form onSubmit={handleSubmitUser}>
-					<div className="mb-3">
-						<label className="form-label" htmlFor="username">Username: </label>
-						<input
-							className="form-control"
-							type="text"
-							name="username"
-							value={username}
-							required
-							autoFocus
-							onChange={e => setUsername(e.target.value)}
-						/>
-					</div>
+								<form onSubmit={handleSubmitUser}>
+									<div className="mb-3">
+										<label className="form-label" htmlFor="username">Username: </label>
+										<input
+											className="form-control"
+											type="text"
+											name="username"
+											value={username}
+											required
+											autoFocus
+											onChange={e => setUsername(e.target.value)}
+										/>
+									</div>
 
-					<div className="mb-3">
-						<label className="form-label" htmlFor="password">Create password: </label>
-						<input
-							className="form-control"
-							type="password"
-							name="password"
-							value={password}
-							required
-							onChange={e => setPassword(e.target.value)}
-						/>
-						<div className="valid-feedback">
-						Looks good!
-						</div>
-					</div>
-					<div className="mb-3">
-						<label className="form-label" htmlFor="profilePicture">Profile picture: </label>
-						<input 
-							className="form-control"
-							type="file"
-							name="profilePicture"
-							onChange={handleFileUpload}
-							/>
-							{profilePicture && <img src={profilePicture} alt="" style={{ height: '200px' }} />}
-					</div>
-					<div className="mb-3">
-						<label className="form-label" htmlFor="favouriteStyles">Favourite tattoo styles: </label>
-						<Select 
-						name="favouriteStyles"
-						components={animatedComponents}
-						isMulti
-						options={tattooStyles} 
-						onChange={handleFavouriteStyleChange}
-						/>
-					</div>
-					<div className="mb-3">
-						<button className="btn btn-success btn-block col-12" type="submit">Sign Up ✍️</button>
-					</div>
-					{message && (
-					<h3>{message}</h3>
-				)}
+									<div className="mb-3">
+										<label className="form-label" htmlFor="password">Create password: </label>
+										<input
+										className="form-control"
+										type="password"
+										name="password"
+										value={password}
+										required
+										onChange={e => setPassword(e.target.value)}
+									/>
+										<div className="valid-feedback">
+											Looks good!
+										</div>
+									</div>
+									<div className="mb-3">
+										<label className="form-label" htmlFor="profilePicture">Profile picture: </label>
+										<input 
+											className="form-control"
+											type="file"
+											name="profilePicture"
+											onChange={handleFileUpload}
+											/>
+											{profilePicture && <img src={profilePicture} alt="" style={{ height: '200px' }} />}
+									</div>
+									<div className="mb-3">
+										<label className="form-label" htmlFor="favouriteStyles">Favourite tattoo styles: </label>
+										<Select 
+										name="favouriteStyles"
+										components={animatedComponents}
+										isMulti
+										options={tattooStyles} 
+										onChange={handleFavouriteStyleChange}
+										/>
+									</div>
+									<div className="mb-3">
+										<button className="btn btn-success btn-block col-12" type="submit">Sign Up</button>
+									</div>
+									{message && (
+									<h3>{message}</h3>
+									)}
 				</form>
 				</div>
 				</div>
@@ -294,7 +294,7 @@ export default function Signup(props) {
 						<button className="btn btn-success btn-block col-12" type="submit">Sign Up ✍️</button>
 					</div>
 						{message && (
-						<h3>{message}</h3>
+						<h4>{message}</h4>
 				)}
 				</form>
 				</div>

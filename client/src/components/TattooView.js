@@ -134,9 +134,11 @@ export default function TattooView(props) {
                         <button className="btn btn-success col-6" type="submit">Add</button>
                     </form>
 
-                    {/* <form> */}
+                 
+                    <div className="d-flex flex-column align-items-center">
                     <button className="btn btn-primary col-6" onClick={showFormButton}>Create a new collection</button>
-                    {/* </form> */}
+                    </div>
+                    
                 
 
                     {showForm && ( 
