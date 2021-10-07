@@ -16,6 +16,8 @@ const fileUploader = require("../config/cloudinary");
 const { response } = require("express");
 const { populate } = require("../models/User");
 
+
+// upload to collection
 router.post("/upload", fileUploader.single("imageURL"), (req, res, next) => {
 
   
@@ -42,7 +44,9 @@ if(req.session.user){
     artist: req.session.user._id
 	})
 		.then(createdTattoo => {
-            User.findByIdAndUpdate(req.session.user._id, { $push: {artistCollection: createdTattoo._id} })
+            console.log('tattoo', createdTattoo)
+            User.findByIdAndUpdate(req.session.user._id, { $push: {artistCollection: createdTattoo._id} }, { new: true } )
+            .populate("artistCollection")
             .then(userFromDB => {
             res.status(200).json(userFromDB)
             })
@@ -50,6 +54,45 @@ if(req.session.user){
 		})
 		.catch(err => next(err));
     }
+});
+
+
+// upload to profile picture
+router.post("/profile-picture/update", fileUploader.single("imageURL"), (req, res, next) => {
+
+  
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+  // get the URL of the uploaded file and send it as a response.
+  // 'secure_url' can be any name, just make sure you remember to use the same when accessing it on the frontend
+
+  res.json({ secure_url: req.file.path });
+});
+
+router.post('/tattoos/create', (req, res, next) => {
+const { imageURL, caption, tags } = req.body;
+  if(req.session.user) {
+}
+if(req.session.user){
+Tattoo.create({
+      
+  imageURL: imageURL,
+  tags: tags,
+  caption: caption,
+  artist: req.session.user._id
+})
+  .then(createdTattoo => {
+          console.log('profile picture', createdTattoo)
+          User.findByIdAndUpdate(req.session.user._id, {profilePicture: createdTattoo._id} )
+          .then(userFromDB => {
+          res.status(200).json(userFromDB)
+          })
+          .catch(err => next(err))
+  })
+  .catch(err => next(err));
+  }
 });
 
 
@@ -77,7 +120,7 @@ router.put('/tattoos/:id', (req, res, next) => {
 const {selectedCollection} = req.body
 const tattooId = req.params.id
 if(req.session.user){
-Collection.findOneAndUpdate({creator: `${req.session.user._id}`, title: `${selectedCollection}`}, { $push: {tattoos: tattooId} })
+Collection.findOneAndUpdate({creator: `${req.session.user._id}`, title: `${selectedCollection}`}, { $push: {tattoos: tattooId} }, { new: true })
   .then(collectionFromDB => {
     console.log('this is the collection', collectionFromDB)
     res.status(200).json(collectionFromDB);
@@ -94,7 +137,7 @@ router.put('/:id/appointments', (req, res, next) => {
   const{date, time, location, artist, price} = req.body
   console.log('body', req.body)
   if(req.session.user){
-  User.findByIdAndUpdate(req.session.user._id, { $push: {myAppointments: {date, time, location, artist, price}} })
+  User.findByIdAndUpdate(req.session.user._id, { $push: {myAppointments: {date, time, location, artist, price}} }, { new: true })
     .then(collectionFromDB => {
       // console.log('this is the collection', collectionFromDB)
       res.status(200).json(collectionFromDB);
@@ -110,11 +153,11 @@ router.put('/:id/appointments', (req, res, next) => {
 router.put('/studio/:id', (req, res, next) => {
   const studioId = req.params.id
   if(req.session.user){
-    Studio.findByIdAndUpdate(req.params.id, { $push: {artists: req.session.user._id}})
+    Studio.findByIdAndUpdate(req.params.id, { $push: {artists: req.session.user._id}}, { new: true })
     .then(studioFromDB => {
       console.log(studioFromDB)
       res.status(200).json(studioFromDB);
-      User.findByIdAndUpdate(req.session.user._id, { $push: {myStudio: studioId}})
+      User.findByIdAndUpdate(req.session.user._id, { $push: {myStudio: studioId}}, { new: true })
       .then(userFromDB => {
         res.status(200).json(userFromDB);
       })
@@ -315,8 +358,6 @@ router.get('/user/appointments', (req,res,next) => {
 // create review on artist page
 router.post('/:id/artist-profile/reviews', (req, res, next) => {
   const {reviewText, rating} = req.body
-  User.findById(req.params.id)
-  .then(artist => {
     Review.create({
       reviewText: reviewText, 
       rating: rating,
@@ -325,23 +366,21 @@ router.post('/:id/artist-profile/reviews', (req, res, next) => {
       reviewAuthorUsername: req.session.user.username
     })
     .then(createdReview => {
-      artist.reviews.push(createdReview)
-      artist.save()
+    User.findByIdAndUpdate(req.params.id, { $push: {reviews: createdReview._id}}, { new: true })
+    .populate("reviews")
+    .then(updatedUser => {
+      res.status(200).json(updatedUser)
+      // code for updated
+    })
     })
   .catch(err => {
     next(err);
   })
-  .catch(err => {
-      console.log(err);
-  })
-  }) 
 })
 
-// create review on artist page
+// create review on studio page
 router.post('/studio/:id/reviews', (req, res, next) => {
   const {reviewText, rating} = req.body
-  User.findById(req.params.id)
-  .then(artist => {
     Review.create({
       reviewText: reviewText, 
       rating: rating,
@@ -349,23 +388,23 @@ router.post('/studio/:id/reviews', (req, res, next) => {
       reviewAuthor: req.session.user._id,
       reviewAuthorUsername: req.session.user.username
     })
-    .then(createdReview => {
-      artist.reviews.push(createdReview)
-      artist.save()
+      .then(createdReview => {
+        Studio.findByIdAndUpdate(req.params.id, { $push: {reviews: createdReview._id}}, { new: true })
+        .populate("reviews")
+      .then(updatedStudio => {
+      res.status(200).json(updatedStudio)
+      // code for updated
     })
-  .catch(err => {
-    next(err);
-  })
-  .catch(err => {
-      console.log(err);
-  })
+    })
+    .catch(err => {
+        next(err);
+    })
   }) 
-})
 
 // edit user styles and profile picture
 router.put('/:id/edit-user', (req, res, next) => {
 	const { favouriteStyles, profilePicture } = req.body;
-	User.findByIdAndUpdate(req.params.id, { favouriteStyles: favouriteStyles, profilePicture: profilePicture }, { new: true })
+	User.findByIdAndUpdate(req.params.id, { favouriteStyles: favouriteStyles, profilePicture: profilePicture }, )
 		.then(updatedUser => {
 			res.status(200).json(updatedUser);
 		})
@@ -378,8 +417,21 @@ router.put('/:id/edit-user', (req, res, next) => {
 router.delete('/artist-profile/reviews/:reviewId', (req, res, next) => {
   const reviewId = req.params.reviewId
   console.log('thereviewid', reviewId)
-  Review.findByIdAndDelete(reviewId)
+  Review.findByIdAndDelete(reviewId, { new: true })
   .then(deletedReview => {
+    console.log('deletedReview', deletedReview)
+    res.status(200).json(deletedReview)
+ 
+})
+.catch(err => next(err))
+})
+
+router.delete('/studio/reviews/:reviewId', (req, res, next) => {
+  const reviewId = req.params.reviewId
+  console.log('thereviewid', reviewId)
+  Review.findByIdAndDelete(reviewId, { new: true })
+  .then(deletedReview => {
+    console.log('deletedReview', deletedReview)
     res.status(200).json(deletedReview)
  
 })
@@ -404,7 +456,7 @@ router.delete('/user-dashboard/appointments/:date', (req, res, next) => {
   const appointmentDate = req.params.date
   console.log('theAppointment', appointmentDate)
   if(req.session.user){
-    User.findByIdAndUpdate(req.session.user._id, { $pull: {myAppointments: {date: `${appointmentDate}`}} })
+    User.findByIdAndUpdate(req.session.user._id, { $pull: {myAppointments: {date: `${appointmentDate}`}} }, { new: true })
       .then(collectionFromDB => {
         // console.log('this is the collection', collectionFromDB)
         res.status(200).json(collectionFromDB);

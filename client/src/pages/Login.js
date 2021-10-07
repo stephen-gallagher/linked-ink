@@ -33,7 +33,7 @@ export default function Login(props) {
                     if(response.role === 'User'){
 					props.history.push(`/${response._id}/user-dashboard`)
                     } else if(response.role === 'Artist'){
-                        props.history.push(`/${response._id}/artist-dashboard`)
+                        props.history.push(`/${response._id}/artist-profile`)
 				}
             }
 			})

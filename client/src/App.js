@@ -8,7 +8,7 @@ import {Switch, Route} from 'react-router-dom';
 import Signup from './pages/Signup';
 import Login from './pages/Login'
 import UserDashboard from './pages/UserDashboard'
-import ArtistDashboard from './pages/ArtistDashboard'
+// import ArtistDashboard from './pages/ArtistDashboard'
 import ProtectedRoute from './components/ProtectedRoute';
 import ArtistProfile from './pages/ArtistProfile';
 import Footer from './components/Footer';
@@ -57,10 +57,7 @@ function App(props) {
         exact path="/:id/user-dashboard" 
         user={user}
         component={UserDashboard}/>
-         <ProtectedRoute 
-        exact path="/:id/artist-dashboard" 
-        user={user}
-        component={ArtistDashboard}/>
+        
         <Route 
         exact path="/:id/artist-profile" 
         // user={user}

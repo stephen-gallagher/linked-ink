@@ -14,6 +14,15 @@ const handleUpload = (file) => {
   return service
     .post("/crud/upload", file)
     .then((res) => res.data)
+    
+    .catch(errorHandler);
+};
+
+const handleProfileUpload = (file) => {
+  return service
+    .post("/crud/profile-picture/update", file)
+    .then((res) => res.data)
+    
     .catch(errorHandler);
 };
 
@@ -27,5 +36,6 @@ const saveNewTattoo = (newTattoo) => {
 export default {
   service,
   handleUpload,
-  saveNewTattoo
+  saveNewTattoo,
+  handleProfileUpload
 };

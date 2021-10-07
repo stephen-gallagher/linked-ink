@@ -109,9 +109,6 @@ export default function AllArtists(props) {
 
 
 
-
-
-
         <div className='mt-5'>
         <h1>Find a Studio</h1>
         <div className="col-6 offset-3">

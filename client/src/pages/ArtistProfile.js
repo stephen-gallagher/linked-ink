@@ -16,6 +16,7 @@ export default function ArtistProfile(props) {
     const [reviewAuthorUsername, setReviewAuthorUsername] = useState('')
     const [currentUser, setCurrentUser] = useState(null)
     const [message, setMessage] = useState('');
+    const [bookingMessage, setBookingMessage] = useState('');
 
 
     const [bodyPart, setBodyPart] = useState('')
@@ -33,6 +34,8 @@ export default function ArtistProfile(props) {
     const [imageURL, setImageURL] = useState('')
     const [caption, setCaption] = useState('')
     const [tags, setTags] = useState('')
+
+    const [reviewOwner, setReviewOwner] = useState(true)
 
     const showArtistWorkButton = (e) => {
         e.preventDefault();
@@ -79,10 +82,11 @@ export default function ArtistProfile(props) {
     }, []) 
 
 
+
     const getCurrentUser = () => {
         axios.get(`/api/crud/users`)
        .then(response => {
-            console.log('user', response.data)
+            // console.log('userinfoooo', response.data)
            setCurrentUser(response.data);
        })
        .catch(err => console.log(err));
@@ -109,6 +113,11 @@ export default function ArtistProfile(props) {
 		 axios.get(`/api/crud/${props.match.params.id}/artist-profile/reviews`)
 			.then(response => {
 				setReviewArtist(response.data);
+            //     response.data.forEach(author => {
+            //     if(currentUser._id === author.reviewAuthor) {
+            //         setReviewOwner(true)
+            //     }
+            // })
 			})
 			.catch(err => console.log(err));
 	}
@@ -119,17 +128,26 @@ export default function ArtistProfile(props) {
 
     const handleSubmit = (e) => {
 		e.preventDefault();
-         axios.post(`/api/crud/${props.match.params.id}/artist-profile/reviews`, {reviewText, rating, reviewAuthorUsername})
-         .then(response => {
+         axios.post(`/api/crud/${props.match.params.id}/artist-profile/reviews`, {reviewText, rating}).then(response => {
             setReviewText('')
             setRating(0)
             setMessage('Your review has been posted!')
-			return response.data;
-            // props.history.push(`/${user._id}/artist-profile`)
-		})
+            console.log('response data', response.data)
+            setReviewArtist(response.data.reviews)
+        })
 		.catch(err => {
 			return err.response.data;
 		});
+    }
+
+
+
+    const handleBookingSubmit = (e) => {
+        setBookingMessage('Your request has been sent!')
+        setBodyPart('')
+        setTattooSize('')
+        setTattooDescription('')
+        setReferenceImage('')
     }
 
     const deleteReview = (id) => {
@@ -155,7 +173,6 @@ console.log("The file to be uploaded is: ", e.target.files[0]);
     service
         .handleUpload(uploadData)
         .then(response => {
-            console.log('the uploaded image', response.secure_url)
             setImageURL(response.secure_url)		
         	})
         .catch(err => console.log("Error when uploading the file: ", err))
@@ -166,13 +183,19 @@ const handleImageUploadSubmit = e => {
     service
     .saveNewTattoo(imageURL, caption, tags )
     .then (response => {
-        console.log('great response', response)
         setImageURL(response.imageURL)
     })
     .catch(err => console.log(err))
+
     axios.post('/api/crud/tattoos/create', {imageURL, caption, tags})
     .then(response => {
-        return response.data;
+        console.log(response)
+        setImageURL(response.imageURL)
+        setTattoos(response.data.artistCollection)
+        setShowArtistWork(true);
+        setShowReviews(false);
+        setShowBookingForm(false);
+        setShowImageUploadForm(false);
     })
     .catch(err => {
         return err.response.data;
@@ -180,7 +203,7 @@ const handleImageUploadSubmit = e => {
 }
 
 	if(user === null){
-		return<></>
+		return<> </>
 	}
     return (
         <>
@@ -213,11 +236,12 @@ const handleImageUploadSubmit = e => {
 
             {showReviews && ( 
             <div className="col-6 mt-3 card mb-3">
-                <h2 className="mt-4 text-white">LEAVE A REVIEW</h2>
+            <img src="/tattoo-images/tattoo-arm-4.jpg" alt="tattoo-girl"className="card-img-top"></img>
+                <h2 className="mt-4">LEAVE A REVIEW</h2>
                     <form className="mb-3" onSubmit={handleSubmit}>
                         <div className="mb-3 offset-4">  
                             <fieldset className="starability-fade">
-                            <legend className="text-white">Rating:</legend>
+                            <legend>Rating:</legend>
                             <input type="radio" id="no-rate" className="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
                             <input type="radio" id="first-rate1" name="review[rating]" value="1" onChange={e => setRating(e.target.value)}/>
                             <label for="first-rate1" title="Terrible">1 star</label>
@@ -233,7 +257,7 @@ const handleImageUploadSubmit = e => {
 
                         </div>
                         <div className="mb-3">
-                            <label className="form-label text-white" htmlFor="body">Your review:</label>
+                            <label className="form-label" htmlFor="body">Your review:</label>
                             <textarea 
                             className= "form-control" 
                             name="review[body]" 
@@ -249,7 +273,7 @@ const handleImageUploadSubmit = e => {
                         <button className="btn btn-success col-6" type="submit">Submit your review</button>
                         </div>
                         {message && (
-						<h3>{message}</h3>
+						<h4>{message}</h4>
 				)}
                     </form>
             {reviewArtist.map(review => {
@@ -264,10 +288,11 @@ const handleImageUploadSubmit = e => {
                             
                             
                             {/* ({review.reviewAuthor} === {currentUser._id} ?  */}
+                            {reviewOwner && (
                                 <button onClick={() => {
                                     deleteReview(review._id)
                                     }} className="btn btn-sm btn-danger">Delete</button>
-                            
+                            )}
                         </div>
                     </div>
                 )
@@ -307,7 +332,7 @@ const handleImageUploadSubmit = e => {
 							<img src="/tattoo-images/tattoo-arm-4.jpg" alt="tattoo-girl"className="card-img-top"></img>
 							<div className="card-body">
 								<h3 className="card-title">Send a booking request</h3>
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={handleBookingSubmit}>
 					<div className="mb-3">
 						<label className="form-label" htmlFor="username">Where do you want the tattoo? </label>
 						<input
@@ -356,9 +381,9 @@ const handleImageUploadSubmit = e => {
                     <div className="mb-3">
 						<button className="btn btn-success btn-block col-12" type="submit">Send request</button>
 					</div>
-					{/* {message && (
-					<h3>{message}</h3>
-				)} */}
+					{bookingMessage && (
+					<h3>{bookingMessage}</h3>
+				)}
 				</form>
 				</div>
 				</div>
@@ -369,10 +394,12 @@ const handleImageUploadSubmit = e => {
             {showImageUploadForm && (
 
                 <div className='col-6'>
-            <div>
-            <h1 className="text-center">New image</h1>
-            <div>
+            <div className="card shadow mt-3">
+            <img src="/tattoo-images/tattoo-arm-4.jpg" alt="tattoo-girl"className="card-img-top"></img>
+            <div clasName="card-body">
+            <h1 className="text-center card-title">New image</h1>
             <form onSubmit={handleImageUploadSubmit}>
+            <div className="mb-3"> 
             <label className="form-label" htmlFor="image">Upload your work: </label>
 					<input 
                         className="form-control"
@@ -380,7 +407,10 @@ const handleImageUploadSubmit = e => {
 						name="imageURL"
 						onChange={handleFileUpload}
 						/>
+    
                         {imageURL && <img src={imageURL} alt="" style={{ height: '200px' }} />}
+                        </div>
+                        <div className="mb-3"> 
                     <label className="form-label" htmlFor="caption">Caption: </label>
 					<input
                         className="form-control"
@@ -389,6 +419,8 @@ const handleImageUploadSubmit = e => {
 						value={caption}
 						onChange={e => setCaption(e.target.value)}
 					/>
+                    </div>
+                    <div className="mb-3"> 
                     <label className="form-label" htmlFor="tags">Tags (separate each tag with a comma): </label>
                     <input
                         className="form-control"
@@ -397,7 +429,8 @@ const handleImageUploadSubmit = e => {
 						// value={tags}
 						onChange={handleTagChange}
 					/>
-                     <button className="btn btn-success btn-block col-5" type="submit">Upload ✍️</button>
+                    </div>
+                     <button className="btn btn-success btn-block col-5 mb-5" type="submit">Upload ✍️</button>
                         </form>
                         </div>
                         </div>

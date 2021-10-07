@@ -21,6 +21,7 @@ export default function UserDashboard(props) {
     const [allArtists, setAllArtists] = useState([]);
     const [appointments, setAppointments] = useState([])
     const [showForm, setShowForm] = useState(false);
+    // const [currentUser, setCurrentUser] = useState(null)
 
 
     const[favouriteStyles, setFavouriteStyles] = useState('')
@@ -69,7 +70,7 @@ export default function UserDashboard(props) {
 		uploadData.append("imageURL", e.target.files[0])
 
 		service
-			.handleUpload(uploadData)
+			.handleProfileUpload(uploadData)
 			.then(response => {
                 console.log('uploading', response.secure_url)
 				setProfilePicture(response.secure_url)
@@ -98,6 +99,19 @@ export default function UserDashboard(props) {
     e.preventDefault();
     setShowForm(!showForm);
     }
+
+
+//     const getCurrentUser = () => {
+//         axios.get(`/api/crud/users`)
+//        .then(response => {
+//             console.log('userinfoooo', response.data)
+//            setCurrentUser(response.data);
+//        })
+//        .catch(err => console.log(err));
+//    }
+//    useEffect(() => { 
+//        getCurrentUser();
+//    }, []) 
 
 
     const getUserDashboard = () => {
@@ -184,6 +198,7 @@ export default function UserDashboard(props) {
 		e.preventDefault();
         axios.put(`/api/crud/${props.match.params.id}/appointments`, {date: date, time: time, location: location, price: price, artist: artist})
         .then(response => {
+            setAppointments(response.data.myAppointments)
 			return response.data;
 		})
 		.catch(err => {
@@ -196,27 +211,44 @@ export default function UserDashboard(props) {
 		e.preventDefault();
         const requestBody = { favouriteStyles, profilePicture };
         console.log('prof picture', profilePicture)
-        // axios.put(`/api/crud/${props.match.params.id}/edit-user`, requestBody)
-        // .then(response => {
-        //     setShowDashboard(true)
-        //     setShowEditDashBoard(false);
-		// 	return response.data;
-		// })
-		// .catch(err => {
-		// 	return err.response.data;
-		// });
+        axios.put(`/api/crud/${props.match.params.id}/edit-user`, requestBody)
+        .then(response => {
+            setShowDashboard(true)
+            setShowEditDashBoard(false);
+            console.log('new image', response.data)
+			return response.data;
+		})
+		.catch(err => {
+			return err.response.data;
+		});
     }
 
 
     const deleteCollection = (id) => {
         console.log(id)
-    axios.delete(`/api/crud/user-dashboard/collections/${id}`)
-} 
+        axios.delete(`/api/crud/user-dashboard/collections/${id}`)
+        .then(response => {
+            console.log('delete collection', response.data)
+            setCollections(collections)
+			return response.data;
+		})
+		.catch(err => {
+			return err.response.data;
+		});
+    } 
 
-const deleteAppointment = (date) => {
-    console.log(date)
-axios.delete(`/api/crud/user-dashboard/appointments/${date}`)
-} 
+    const deleteAppointment = (date) => {
+        console.log(date)
+        axios.delete(`/api/crud/user-dashboard/appointments/${date}`)
+        .then(response => {
+            console.log('delete appointment', response.data)
+            setAppointments(response.data.myAppointments)
+			return response.data;
+		})
+		.catch(err => {
+			return err.response.data;
+		});
+    } 
 
 
     
@@ -230,7 +262,7 @@ axios.delete(`/api/crud/user-dashboard/appointments/${date}`)
             <h3>Welcome  {props.user.username}</h3>
             </div>
             <div className="d-flex flex-column align-items-center justify-content-center mt-3">
-            <img src={props.user.profilePicture} alt="profile" style={{ width: '300px' }}/>
+            <img src={profilePicture} alt="profile" style={{ width: '300px' }}/>
             </div>
             <div className="card-body d-flex flex-column justify-content-center align-items-center">
          <p><strong>Your favourite tattoo tyle/s:</strong> {props.user.favouriteStyles.map(style => {

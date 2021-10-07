@@ -101,7 +101,7 @@ export default function Signup(props) {
                     // add the user to the state of App.js
                     props.setUser(response)
                     // redirect to the projects overview
-                    props.history.push(`/${response._id}/artist-dashboard`)
+                    props.history.push(`/${response._id}/artist-profile`)
                 }
 			})
 			.catch(err => console.log(err));

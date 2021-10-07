@@ -16,6 +16,8 @@ export default function StudioShow(props) {
     const [reviews, setReviews] = useState([])
     const [reviewArtist, setReviewArtist] = useState([])
     const [reviewAuthorUsername, setReviewAuthorUsername] = useState('')
+    const [message, setMessage] = useState('');
+
 
     const [showArtists, setShowArtists] = useState(true);
     const [showReviews, setShowReviews] = useState(false);
@@ -61,6 +63,11 @@ export default function StudioShow(props) {
          axios.post(`/api/crud/studio/${props.match.params.id}/reviews`, {reviewText, rating, reviewAuthorUsername})
          .then(response => {
              console.log('reviewData', response.data)
+            setReviewText('')
+            setRating(0)
+            setMessage('Your review has been posted!')
+            console.log('response data', response.data)
+            setReviewArtist(response.data.reviews)
 			return response.data;
 		})
 		.catch(err => {
@@ -128,10 +135,12 @@ export default function StudioShow(props) {
         }, [lat]);
 
 
-        const handleSubmit = (e) => {
+        const handleJoinSubmit = (e) => {
             e.preventDefault();
             axios.put(`/api/crud/studio/${props.match.params.id}`)
             .then(response => {
+                console.log('joindata', response.data)
+                setArtists(response.data.artists)
                 return response.data;
             })
             .catch(err => {
@@ -150,8 +159,7 @@ export default function StudioShow(props) {
 
 
         const deleteReview = (id) => {
-            console.log('this id', id)
-        axios.delete(`/api/crud/artist-profile/reviews/${id}`)
+        axios.delete(`/api/crud/studio/reviews/${id}`)
     } 
 
     return (
@@ -187,23 +195,13 @@ export default function StudioShow(props) {
             </div>
 
 
-
-            {/* <div className="col-6">
-            <h1>{name}</h1>
-            <h2>{location}</h2>
-            <p>{description}</p>
-            <form onSubmit={handleSubmit}>
-                <button type="submit" className="btn btn-primary">Join this studio</button>
-            </form>
-            </div> */}
-
             {showArtists && ( 
             <div className="col-6 mt-3 mb-3">
             <div className="card">
             <div className="bg-dark col-12 text-white p-2 rounded">
             <h4>Artists at this studio</h4>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleJoinSubmit}>
                 <button type="submit" className="btn btn-primary mt-3">Join this studio</button>
             </form>
             <div className="d-flex flex-wrap align-items-center justify-content-center">
