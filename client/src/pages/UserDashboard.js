@@ -21,7 +21,6 @@ export default function UserDashboard(props) {
     const [allArtists, setAllArtists] = useState([]);
     const [appointments, setAppointments] = useState([])
     const [showForm, setShowForm] = useState(false);
-    // const [currentUser, setCurrentUser] = useState(null)
 
 
     const[favouriteStyles, setFavouriteStyles] = useState('')
