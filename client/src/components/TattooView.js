@@ -21,6 +21,7 @@ export default function TattooView(props) {
     const [description, setDescription] = useState('')
     const [collections, setCollections] = useState([])
     const [selectedCollection, setSelectedCollection] = useState([])
+    const [message, setMessage] = useState('')
 
 
     const getCurrentUser = () => {
@@ -74,6 +75,11 @@ export default function TattooView(props) {
 		e.preventDefault();
          axios.post('/api/crud/collections/new', {title, description})
          .then(response => {
+             setTitle('')
+             setDescription('')
+             setMessage('Collection created')
+             getUserCollections(
+             )
 			return response.data;
 		})
 		.catch(err => {
@@ -85,6 +91,9 @@ export default function TattooView(props) {
 		e.preventDefault();
         axios.put(`/api/crud/tattoos/${props.match.params.id}`, {selectedCollection: selectedCollection})
         .then(response => {
+            console.log(response)
+            setSelectedCollection([])
+            setMessage('Image has been added to your collection')
 			return response.data;
 		})
 		.catch(err => {
@@ -132,6 +141,9 @@ export default function TattooView(props) {
                             />
                         </div>
                         <button className="btn btn-success col-6" type="submit">Add</button>
+                        {message && (
+						<h4>{message}</h4>
+				)}
                     </form>
 
                  
@@ -175,6 +187,9 @@ export default function TattooView(props) {
 
                       
                         <button className="btn btn-success col-6" type="submit">Create</button>
+                        {message && (
+						<h4>{message}</h4>
+				)}
                     </form>
                     
 
@@ -182,8 +197,14 @@ export default function TattooView(props) {
                         </div>
                         )}
                         <div>
-                        <button className="btn btn-danger col-6 mt-5"><Link to={`/${tattoo.artist}/artist-profile`} style={{color:"white"}}>
+                        <button className="btn btn-primary col-6 mt-5"><Link to={`/${tattoo.artist}/artist-profile`} style={{color:"white"}}>
                             Back to artist profile
+                            </Link>
+                        </button>
+                        </div>
+                        <div>
+                        <button className="btn btn-primary col-6 mt-5"><Link to={`/${currentUser._id}/user-dashbaoard`} style={{color:"white"}}>
+                            To your collections
                             </Link>
                         </button>
                         </div>

@@ -13,7 +13,7 @@ export default function Navbar(props) {
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-  <Link to="/" className="navbar-brand">Tattoo Finder</Link>
+  <Link to="/" className="navbar-brand">Linked Ink</Link>
   <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span className="navbar-toggler-icon"></span>
   </button>
@@ -29,7 +29,7 @@ export default function Navbar(props) {
         <Link to="/all-studios" className="nav-link">Find a Studio</Link>
       </li>
       <li className="nav-item">
-        <Link to="/:id/artist-dashboard" className="nav-link">My Dashboard</Link>
+        <Link to="/artist-dashboard" className="nav-link">My Dashboard</Link>
       </li>
       <li className="nav-item">
         <Link to="/:id/artist-profile" className="nav-link">My Profile</Link>
@@ -43,15 +43,7 @@ export default function Navbar(props) {
       <li className="nav-item">
         <Link to="/signup" className="nav-link" href="#">Sign up</Link>
       </li>
-      <li className="nav-item dropdown">
-        <Link to="/" className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Search
-        </Link>
-        <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a className="dropdown-item" href="/all-artists">Find an Artist</a>
-          <a className="dropdown-item" href="/all-studios">Find a Studio</a>
-        </div>
-      </li>
+
     </ul>
   </div>
 </nav>

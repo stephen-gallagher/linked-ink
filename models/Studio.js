@@ -11,8 +11,8 @@ const studioSchema = new Schema ({
     },
         coordinates: {
             type: [Number],
-            required: true
-        }
+            required: true,
+        },
     },
     description: String,
     imageURL: String,

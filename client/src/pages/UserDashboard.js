@@ -22,6 +22,10 @@ export default function UserDashboard(props) {
     const [appointments, setAppointments] = useState([])
     const [showForm, setShowForm] = useState(false);
 
+    const [allCollections, setAllCollections] = useState(true)
+    const [thisCollection, setThisCollection] = useState(false)
+    const [collectionShow, setCollectionShow] = useState(null)
+
 
     const[favouriteStyles, setFavouriteStyles] = useState('')
     const[profilePicture, setProfilePicture] = useState('')
@@ -78,10 +82,27 @@ export default function UserDashboard(props) {
 	};
 
 
+    const showCollection = (id) => {
+        console.log(id)
+        axios.get(`/api/crud/mycollection/${id}`)
+			.then(response => {
+                console.log('collection', response.data)
+				setCollectionShow(response.data);
+                setThisCollection(true)
+                setAllCollections(false)
+                // setShowDashboard(false)
+                setShowEditDashBoard(false);
+                console.log(collectionShow)
+			})
+			.catch(err => console.log(err));
+	}
+
+
     const showDashboardButton = (e) => {
         e.preventDefault();
         setShowDashboard(true)
         setShowEditDashBoard(false);
+        setThisCollection(false);
         }
 
 
@@ -90,7 +111,16 @@ export default function UserDashboard(props) {
         e.preventDefault();
         setShowDashboard(false);
         setShowEditDashBoard(true);
+        setThisCollection(false);
         }
+
+        const showAllCollectionsButton = (e) => {
+            e.preventDefault();
+            setShowDashboard(true);
+            setShowEditDashBoard(false);
+            setThisCollection(false);
+            setAllCollections(true);
+            }
 
 
 
@@ -188,16 +218,14 @@ export default function UserDashboard(props) {
 	}, [])
 
 
-	if(collections === null){
-		return<></>
-	}
+
 
 
     const handleSubmit = (e) => {
 		e.preventDefault();
         axios.put(`/api/crud/${props.match.params.id}/appointments`, {date: date, time: time, location: location, price: price, artist: artist})
         .then(response => {
-            setAppointments(response.data.myAppointments)
+            getUserAppointments()
 			return response.data;
 		})
 		.catch(err => {
@@ -236,6 +264,8 @@ export default function UserDashboard(props) {
 		});
     } 
 
+    
+
     const deleteAppointment = (date) => {
         console.log(date)
         axios.delete(`/api/crud/user-dashboard/appointments/${date}`)
@@ -249,10 +279,14 @@ export default function UserDashboard(props) {
 		});
     } 
 
+    if(collections === null){
+		return<></>
+	}
 
     
     return (
         <div>
+
         {showDashhoard && (
         <div className="row">
             <div className="col-3 offset-1 mt-3 ml-1">
@@ -391,7 +425,7 @@ export default function UserDashboard(props) {
             </div>
             </div>
             {/* <div> */}
-
+{allCollections &&(
             <div className="col-7 mt-3">
             <div className="card">
             <div className="bg-dark bg-gradient col-12 text-white p-2 rounded">
@@ -406,13 +440,13 @@ export default function UserDashboard(props) {
                     {collection.tattoos.slice(0,4).map(tattoo => {
                         return (
                             <div className="p-1">
-                              <img src={tattoo.imageURL} style={{width:"100px", height:"100px"}}></img>
+                              <img className="collectonThumbnail" src={tattoo.imageURL} style={{width:"100px", height:"100px"}}></img>
                             </div>
                         )
                     })}
-                        <Link to={`/collections/${collection._id}`}>
-                            <p>{collection.title}</p>
-                        </Link>
+                        <button onClick={() => {
+                                    showCollection(collection._id)
+                                    }} className="btn btn-sm btn-primary">{collection.title}</button>
                     
                             
                     </div>
@@ -421,12 +455,40 @@ export default function UserDashboard(props) {
                 })}
                 </div>
             </div>
+            )}
 
 
 
 
 
-            </div>
+          
+
+
+       
+{thisCollection && (
+         <div className="col-7 mt-3">
+<div className="card">
+<div>
+    <h2>{collectionShow.title}</h2>
+    <p>{collectionShow.description}</p>
+    <button className="btn btn-success mb-4 mt-4 col-6" onClick={showAllCollectionsButton}>Back</button>
+   {collectionShow !== null ? (
+
+       collectionShow.tattoos.map(image => (
+           <div>
+           <img src={image.imageURL} style={{width:"300px"}}></img>
+           <h5>{image.caption}</h5>
+           <p><strong>Done by: </strong> <Link to={`/${image.artist._id}/artist-profile`}>{image.artist.firstName} {image.artist.lastName}</Link></p>
+           </div>
+       
+       ))
+   ) : (<></>)}
+                </div>
+                </div>
+                </div>
+                )}
+           
+                </div>
             )}
 
 
@@ -566,8 +628,58 @@ export default function UserDashboard(props) {
 
 
             
- 
+            
+                
 
+
+
+            {/* <div className="bg-dark col-12 text-white p-2 rounded">
+                <h2>Your collections:</h2>
+                </div>
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+  </ol> */}
+  {/* {collectionShow !== null ? (collectionShow.map(image => {
+      return (
+        
+      )
+    }))} */}
+
+    {/* {collectionShow !== null ? (collectionShow.map(image => {
+        return (
+            <img class="d-block w-100" src={image.imageURL} alt="First slide"></img>
+        )
+    }))}
+                )}
+                <div> */}
+    
+  {/* <div class="carousel-inner">
+    <div class="carousel-item">
+      <img class="d-block w-100" src={image.imageURL} alt="First slide"></img>
+    </div>
+    
+  </div>
+  
+  
+  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+  )
+}))} */}
+{/* </div>  */}
+            
+            
+        
+                {/* </div>
+             </div> */}
 
 
 
@@ -578,41 +690,3 @@ export default function UserDashboard(props) {
 
 
 
-
-
-
-
-{/* 
-            <div className="col-7 mt-3">
-            <div className="card">
-            <div className="bg-dark col-12 text-white p-2 rounded">
-                <h2>Your collections:</h2>
-                </div>
-                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-  <ol class="carousel-indicators">
-    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-  </ol>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img class="d-block w-100" src="..." alt="First slide">
-    </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="..." alt="Second slide">
-    </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="..." alt="Third slide">
-    </div>
-  </div>
-  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-</div> */}
-                {/* </div> */}
-            {/* </div> */}

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+
 .App {
   text-align: center;
 }
@@ -93,4 +95,36 @@
 
 li {
   list-style-type: none;
+}
+
+.homepageImage {
+  position: relative;
+}
+
+.homepageText {
+  font-family: "Righteous";
+  font-size: 3.5em;
+  /* margin-left: 300px; */
+  padding-left: 120px;
+  padding-top: 50px;
+  position: absolute;
+  top: 200px;
+  left: 0;
+  width: 100%;
+  margin: 0 auto;
+  width: 300px;
+  height: 50px;
+}
+
+.homeHeading {
+  font-size: 1.2em
+}
+
+.signupPage {
+  /* background-color: slategrey; */
+}
+
+.collectonThumbnail {
+  object-fit: cover; /* Do not scale the image */
+  width: 100%;
 }

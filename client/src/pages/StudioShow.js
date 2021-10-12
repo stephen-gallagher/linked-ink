@@ -4,6 +4,8 @@ import axios from 'axios'
 // import MapboxGL from "@react-native-mapbox-gl/maps";
 import mapboxgl from 'mapbox-gl'
 import {Link} from 'react-router-dom'
+// const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+// const geocoder = mbxGeocoding({ accessToken: mapboxgl.accessToken });
 
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic3RlcGhlbmdhbGxhZ2hlciIsImEiOiJja25mdmVwN2wxYzd0Mm9vN3A2bjV1a2U1In0.2-AsAryWffIh9UqbCHW_GQ"
@@ -17,6 +19,7 @@ export default function StudioShow(props) {
     const [reviewArtist, setReviewArtist] = useState([])
     const [reviewAuthorUsername, setReviewAuthorUsername] = useState('')
     const [message, setMessage] = useState('');
+    const [currentUser, setCurrentUser] = useState(null)
 
 
     const [showArtists, setShowArtists] = useState(true);
@@ -48,7 +51,7 @@ export default function StudioShow(props) {
 		// get request to the server
 		 axios.get(`/api/crud/studio/${props.match.params.id}/reviews`)
 			.then(response => {
-                console.log('reviews', response.data)
+                // console.log('reviews', response.data)
 				setReviewArtist(response.data);
 			})
 			.catch(err => console.log(err));
@@ -62,7 +65,7 @@ export default function StudioShow(props) {
 		e.preventDefault();
          axios.post(`/api/crud/studio/${props.match.params.id}/reviews`, {reviewText, rating, reviewAuthorUsername})
          .then(response => {
-             console.log('reviewData', response.data)
+            //  console.log('reviewData', response.data)
             setReviewText('')
             setRating(0)
             setMessage('Your review has been posted!')
@@ -81,12 +84,13 @@ export default function StudioShow(props) {
     const [artists, setArtists] = useState([])
     const [imageURL, setImageURL]  = useState('')
 
-    // const [geometry, setGeometry] = useState({})
+    const [geometry, setGeometry] = useState(null)
 
     const getStudio = () => {
 		// get request to the server
 		axios.get(`/api/crud/studio/${props.match.params.id}`)
 			.then(response => {
+                console.log('response data', response.data[0])
 				console.log('geography',response.data[0].geometry.coordinates);
                 setName(response.data[0].name)
                 setLocation(response.data[0].location)
@@ -94,7 +98,7 @@ export default function StudioShow(props) {
                 setImageURL(response.data[0].imageURL)
                 setLng(response.data[0].geometry.coordinates[0])
                 setLat(response.data[0].geometry.coordinates[1])
-                // setGeometry(response.data[0].geometry)
+                setGeometry(response.data[0].geometry)
 			})
 			.catch(err => console.log(err));
 	}
@@ -102,6 +106,20 @@ export default function StudioShow(props) {
 		getStudio();
 
 	}, [])
+
+
+
+    const getCurrentUser = () => {
+        axios.get(`/api/crud/users`)
+       .then(response => {
+            // console.log('userinfoooo', response.data._id)
+           setCurrentUser(response.data);
+       })
+       .catch(err => console.log(err));
+   }
+   useEffect(() => { 
+       getCurrentUser();
+   }, []) 
 
 
     const getStudioArtists = () => {
@@ -140,13 +158,18 @@ export default function StudioShow(props) {
             axios.put(`/api/crud/studio/${props.match.params.id}`)
             .then(response => {
                 console.log('joindata', response.data)
-                setArtists(response.data.artists)
+                getStudioArtists()
                 return response.data;
             })
             .catch(err => {
                 return err.response.data;
             });
         }
+
+
+        const deleteReview = (id) => {
+            axios.delete(`/api/crud/studio/reviews/${id}`)
+        } 
     
 
         if(mapContainer === null){
@@ -158,15 +181,10 @@ export default function StudioShow(props) {
         }
 
 
-        const deleteReview = (id) => {
-        axios.delete(`/api/crud/studio/reviews/${id}`)
-    } 
 
     return (
 
-        <div>
-
-            
+        <div>            
             {/* <div className="col-6"> */}
             <div className="sidebar">
             {/* </div> */}
@@ -226,12 +244,13 @@ export default function StudioShow(props) {
 
 
             {showReviews && ( 
-            <div className="col-6 mt-3 card mb-3">
+            <div className="col-6 mt-3 card mb-3 ">
+            <img src="/tattoo-images/tattoo-arm-4.jpg" alt="tattoo-girl"className="card-img-top" style={{height:"150px"}}></img>
                 <h2 className="mt-4">LEAVE A REVIEW</h2>
                     <form className="mb-3" onSubmit={handleReviewSubmit}>
                         <div className="mb-3 offset-4">  
                             <fieldset className="starability-fade">
-                    w        <legend>Rating:</legend>
+                            <legend>Rating:</legend>
                             <input type="radio" id="no-rate" className="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
                             <input type="radio" id="first-rate1" name="review[rating]" value="1" onChange={e => setRating(e.target.value)}/>
                             <label for="first-rate1" title="Terrible">1 star</label>
@@ -273,9 +292,9 @@ export default function StudioShow(props) {
                             
                             
                             {/* ({review.reviewAuthor} === {currentUser._id} ?  */}
-                                <button onClick={() => {
+                                {currentUser._id === review.reviewAuthor ? (<button onClick={() => {
                                     deleteReview(review._id)
-                                    }} className="btn btn-sm btn-danger">Delete</button>
+                                    }} className="btn btn-sm btn-danger">Delete</button>) : <></>}
                             
                         </div>
                     </div>

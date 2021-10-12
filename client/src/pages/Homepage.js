@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 
+
 export default function Homepage(props) {
 
 
@@ -27,17 +28,21 @@ export default function Homepage(props) {
         <div>
       
             <div>
-                <img className="w-100"src="/tattoo-images/tattoo-machine-2.png" style={{vw:'100'}}></img>
-                <h1>Find and book your new tattoo</h1>
-            </div>
-            <div classname="d-flex position-absolute">
-                <h1>I am...</h1>
-                <div>
+                <img className="w-100 homepageImage" src="/tattoo-images/tattoo-machine-2.png"></img>
+                <div className="homepageText w-30 col-6">
+                <h1 className="homeHeading">Find and book your new tattoo</h1>
+        
+        
+                
+        
                     <Link to="/signup">Sign up</Link>
-                </div>
+                    </div>
+                    </div>
 
                
-            </div>
+       
         </div>
     )
 }
+
+// GTswPON7eFz5LJbv

@@ -35,6 +35,7 @@ export default function Signup(props) {
 		e.preventDefault(); 
 		axios.post(`/api/crud/new-studio`, {name, location, description, imageURL})
          .then(response => {
+			props.history.push(`/all-studios`)
 			return response.data;
 		})
 		.catch(err => {
@@ -43,7 +44,9 @@ export default function Signup(props) {
         
 	}
 
-
+if(location === null) {
+	return <></>
+}
 
 	return (
 		<div className="signupPage">
@@ -103,7 +106,7 @@ export default function Signup(props) {
 							{imageURL && <img src={imageURL} alt="" style={{ height: '200px' }} />}
 					</div>
 					<div className="mb-3">
-						<button className="btn btn-success btn-block col-12" type="submit">Sign Up ✍️</button>
+						<button className="btn btn-success btn-block col-12" type="submit">Create</button>
 					</div>
 				
 				</form>
