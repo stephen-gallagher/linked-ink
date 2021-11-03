@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from 'axios';
 
 const service = axios.create({
   // make sure you use PORT = 5005 (the port where our server is running)
-  baseURL: "http://localhost:5005/api"
+  // baseURL: "http://linked"
   // withCredentials: true // => you might need this when having the users in the app
 });
 
@@ -12,30 +12,30 @@ const errorHandler = (err) => {
 
 const handleUpload = (file) => {
   return service
-    .post("/crud/upload", file)
+    .post('/crud/upload', file)
     .then((res) => res.data)
-    
+
     .catch(errorHandler);
 };
 
 const handleProfileUpload = (file) => {
   return service
-    .post("/crud/profile-picture/update", file)
+    .post('/crud/profile-picture/update', file)
     .then((res) => res.data)
-    
+
     .catch(errorHandler);
 };
 
 const saveNewTattoo = (newTattoo) => {
-    return service
-      .post("/crud/tattoos/create", newTattoo)
-      .then((res) => res.data)
-      .catch(errorHandler);
-  };
+  return service
+    .post('/crud/tattoos/create', newTattoo)
+    .then((res) => res.data)
+    .catch(errorHandler);
+};
 
 export default {
   service,
   handleUpload,
   saveNewTattoo,
-  handleProfileUpload
+  handleProfileUpload,
 };
