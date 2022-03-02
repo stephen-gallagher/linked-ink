@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { OverlayTrigger, Popover, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
+import Fade from 'react-reveal/Fade';
 
 mapboxgl.accessToken =
   'pk.eyJ1Ijoic3RlcGhlbmdhbGxhZ2hlciIsImEiOiJja25mdmVwN2wxYzd0Mm9vN3A2bjV1a2U1In0.2-AsAryWffIh9UqbCHW_GQ';
@@ -78,73 +79,89 @@ export default function AllArtists(props) {
   const handleSearchChange = (event) => {
     event.preventDefault();
     setSearch(event.target.value);
-    let newList = allStudios.filter((studio) => {
-      return `${studio.name}`.toLowerCase().includes(search.toLowerCase());
-    });
-    setAllStudios(newList);
-  };
 
+    // setAllStudios(newList);
+  };
+  let newList = allStudios.filter((studio) => {
+    return `${studio.name}`.toLowerCase().includes(search.toLowerCase());
+  });
   //   if(mapContainer === null){
   //     return<></>
   // }
 
   return (
-    <div>
+    <div
+      style={{
+        background: `radial-gradient(circle, rgba(255,255,255,1), rgba(140, 166, 196,1))`,
+      }}
+    >
       {/* <div className="sidebar"> */}
       {/* </div> */}
       {/* <div ref={mapContainer} className="mapContainer" style={{height:"200px"}}/> */}
       {/* </div> */}
+      <div
+        className="mt-5 exploreHeadingDiv"
+        style={{
+          background: `radial-gradient(circle, rgba(255,255,255,1), rgba(140, 166, 196,1))`,
+        }}
+      >
+        <Fade top duration={1000} delay={600} distance="30px">
+          <div className="border border-white border-4 col-6 offset-3 mb-3 p-4">
+            <h1 className="exploreHeadingText">Find a Studio</h1>
+            <div className="col-6 offset-3">
+              <h3>All participating studios are listed below</h3>
+              <h5 className="text-dark">
+                Would you like to add your studio?{' '}
+                <Link to="/new-studio">Click here</Link>
+              </h5>
+            </div>
 
-      <div className="mt-5">
-        <h1>Find a Studio</h1>
-        <div className="col-6 offset-3">
-          <h3>All participating studios are listed below</h3>
-          <h5>
-            Would you like to add your studio?{' '}
-            <Link to="/new-studio">Click here</Link>
-          </h5>
-        </div>
-
-        <input
-          type="text"
-          name="search"
-          id="search"
-          value={search}
-          placeholder="Search By Name"
-          onChange={handleSearchChange}
-        />
-
-        <div className="mt-5 mb-5 d-flex flex-wrap justify-content-start align-items-start">
-          {allStudios.map((studio) => {
-            return (
-              <div className="col-4 mb-5 offset-1 card bg-dark bg-gradient text-white border-dark">
-                <div className="row">
-                  <div className="col-md-6">
-                    <img
-                      className="img-fluid rounded mt-2 mb-2 border-light p-2"
-                      src={studio.imageURL}
-                      style={{ height: '200px' }}
-                    ></img>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="card-body mt-5">
-                      <h4 className="card-title"> {studio.name}</h4>
-                      <p className="card-text"> {studio.location}</p>
-                      <button className="btn btn-light text-dark">
-                        <Link
-                          className="text-dark"
-                          to={`/studio/${studio._id}`}
-                        >
-                          View this studio
-                        </Link>
-                      </button>
-                    </div>
+            <input
+              type="text"
+              name="search"
+              id="search"
+              value={search}
+              placeholder="Search By Name"
+              onChange={handleSearchChange}
+            />
+          </div>
+        </Fade>
+        <Fade bottom duration={1000} delay={600} distance="30px">
+          <div className="mt-5 offset-1 mb-5 d-flex flex-wrap justify-content-start align-items-start">
+            {newList.map((studio) => {
+              return (
+                <div
+                  className="col-4  mb-5 offset-1 card bg-dark bg-gradient text-white border-white border-4 artist-grid"
+                  style={{ borderRadius: '15px' }}
+                >
+                  <div className="d-flex flex-column img-grid">
+                    <Link className="text-dark" to={`/studio/${studio._id}`}>
+                      <div className=" ml-50 ">
+                        <img
+                          className="img-fluid rounded mt-3"
+                          src={studio.imageURL}
+                          style={{ width: '550px', border: '5px solid white' }}
+                        ></img>
+                      </div>
+                      <div className="col-md-10 offset-1 ">
+                        <div className="card-body mt-2 ">
+                          <h2 className="card-title userHeading">
+                            {' '}
+                            {studio.name}
+                          </h2>
+                          <p className="card-text"> {studio.location}</p>
+                          <button className="btn btn-light text-dark">
+                            View this studio
+                          </button>
+                        </div>
+                      </div>
+                    </Link>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </Fade>
       </div>
     </div>
   );

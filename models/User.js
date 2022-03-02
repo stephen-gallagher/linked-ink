@@ -1,10 +1,10 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 // TODO: Please make sure you edit the user model to whatever makes sense in this case
 const userSchema = new Schema({
   username: {
     type: String,
-    unique: true
+    unique: true,
   },
   password: String,
   role: String,
@@ -12,58 +12,55 @@ const userSchema = new Schema({
   lastName: String,
   email: String,
   profilePicture: String,
-  tattooStyle: [
-    String
-  ],
-  favouriteStyles: [
-    String,
-  ],
+  tattooStyle: [String],
+  favouriteStyles: [String],
   aboutMe: String,
   favouriteArtists: [
-      {
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+  artistCollection: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Tattoo',
+    },
+  ],
+  userCollections: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Tattoo',
+    },
+  ],
+  myAppointments: [
+    {
+      date: String,
+      time: String,
+      price: String,
+      location: {
+        type: Schema.Types.ObjectId,
+        ref: 'Studio',
+      },
+      artist: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-      }
-    ],
-  artistCollection: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Tattoo',
-      }
-    ],
-    userCollections: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Tattoo',
-      }
-    ],
-    myAppointments: [
-      {
-        date: String,
-        time: String,
-        Price: String,
-        location: {
-            type: Schema.Types.ObjectId,
-            ref: "Studio"
-        },
-        artist: {
-          type: Schema.Types.ObjectId,
-          ref: "User"
-        },
-      }
-    ],
-    reviews: [
-      {
-          type: Schema.Types.ObjectId,
-          ref: 'Review'
-      }
+      },
+    },
+  ],
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Review',
+    },
   ],
   myStudio: {
     type: Schema.Types.ObjectId,
-    ref: 'Studio'
-    }
+    ref: 'Studio',
+  },
+  city: String,
 });
 
-const User = model("User", userSchema);
+const User = model('User', userSchema);
 
 module.exports = User;

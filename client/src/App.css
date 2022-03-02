@@ -1,4 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+*:not(select) {
+  font-family: 'Ubuntu';
+  color: white;
+}
 
 .App {
   text-align: center;
@@ -20,14 +25,14 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  /* background-color: #282c34; */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  /* color: white; */
 }
 
 .App-link {
@@ -43,6 +48,11 @@
   }
 }
 
+.nav-link {
+  font-family: 'Righteous';
+  font-size: 1.2em;
+}
+
 .toggle-switch {
   position: relative;
   display: inline-block;
@@ -50,7 +60,7 @@
   height: 25px;
   margin: 0 10px;
 }
-.toggle-switch input[type="checkbox"] {
+.toggle-switch input[type='checkbox'] {
   display: none;
 }
 .toggle-switch .switch {
@@ -66,7 +76,7 @@
 }
 .toggle-switch .switch::before {
   position: absolute;
-  content: "";
+  content: '';
   left: 2px;
   top: 2px;
   width: 21px;
@@ -75,11 +85,11 @@
   border-radius: 50%;
   transition: transform 0.3s ease;
 }
-.toggle-switch input[type="checkbox"]:checked + .switch::before {
+.toggle-switch input[type='checkbox']:checked + .switch::before {
   transform: translateX(25px);
   background-color: #8facca;
 }
-.toggle-switch input[type="checkbox"]:checked + .switch {
+.toggle-switch input[type='checkbox']:checked + .switch {
   background-color: #171c22;
 }
 
@@ -97,12 +107,26 @@ li {
   list-style-type: none;
 }
 
+.collectionAlbum {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  /* width: 500px; */
+}
+
+.album2 {
+  display: flex;
+  flex-direction: column;
+}
+
 .homepageImage {
   position: relative;
+  height: 88vh;
+  object-fit: cover;
 }
 
 .homepageText {
-  font-family: "Righteous";
+  font-family: 'Righteous';
   font-size: 3.5em;
   /* margin-left: 300px; */
   padding-left: 120px;
@@ -116,8 +140,18 @@ li {
   height: 50px;
 }
 
+.loginText {
+  font-size: 25px;
+}
+
 .homeHeading {
-  font-size: 1.2em
+  font-size: 1.2em;
+  font-family: 'Righteous';
+}
+
+.searchText {
+  font-size: 1.8em;
+  font-family: 'Righteous';
 }
 
 .signupPage {
@@ -127,4 +161,162 @@ li {
 .collectonThumbnail {
   object-fit: cover; /* Do not scale the image */
   width: 100%;
+}
+
+.background {
+  /* background-color: #282c34; */
+  /* color: rgb(255, 247, 177); */
+  fill: #282c34;
+}
+
+.exploreHeadingDiv {
+  position: sticky;
+  top: 0;
+  /* background-color: white; */
+}
+
+.exploreHeadingText {
+  font-family: 'Righteous';
+  font-size: 3.5em;
+}
+
+.userHeading {
+  font-family: 'Righteous';
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: 0.5s ease;
+  background: linear-gradient(to bottom right, #ff5959, #5bbaf9);
+}
+
+.tattooOverlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: 0.5s ease;
+  background: linear-gradient(to bottom right, #c0e4b9, #0b273a);
+}
+
+.container:hover .overlay {
+  opacity: 0.8;
+}
+
+.container:hover .tattooOverlay {
+  opacity: 0.8;
+}
+
+.artistInformation {
+  color: white;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* artist grid */
+/* .artist-grid {
+  position: relative;
+  width: 50%;
+} */
+
+.img-grid {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: 0.5s ease;
+  backface-visibility: hidden;
+}
+
+.middle {
+  transition: 0.5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.artist-grid:hover .img-grid {
+  opacity: 0.3;
+}
+
+.artist-grid:hover .middle {
+  opacity: 1;
+}
+
+.btn-success {
+  background-color: #ff5959 !important;
+  border: none !important;
+  font-family: 'Righteous' !important;
+  /* color: #ff5959; */
+}
+
+.btn-primary {
+  background-color: #4c9449 !important;
+  border: none !important;
+  font-family: 'Righteous' !important;
+  /* color: #ff5959; */
+}
+
+label {
+  font-family: 'Righteous' !important;
+}
+
+input {
+  font-family: 'Righteous' !important;
+  color: #0b273a;
+}
+
+option {
+  font-family: 'Righteous' !important;
+  color: #0b273a !important;
+  background-color: green !important;
+}
+
+.tattoo-style {
+  color: #0b273a !important;
+}
+
+.mapboxgl-ctrl-attrib-inner a {
+  text-decoration: none;
+  color: #0c2112;
+}
+
+.studioArtistNames {
+  text-decoration: none;
+  font-family: 'Righteous';
+}
+
+.blueBackground {
+  background-color: coral;
+}
+
+.vl {
+  border-left: 3px solid white;
+  height: 400px;
+}
+
+.vl2 {
+  border-left: 3px solid white;
+  height: 200px;
 }

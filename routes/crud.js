@@ -33,8 +33,8 @@ router.post('/upload', fileUploader.single('imageURL'), (req, res, next) => {
 
 router.post('/tattoos/create', (req, res, next) => {
   const { imageURL, caption, tags } = req.body;
-  if (req.session.user) {
-  }
+  // if (req.session.user) {
+  // }
   if (req.session.user) {
     Tattoo.create({
       imageURL: imageURL,
@@ -102,11 +102,12 @@ router.post('/tattoos/create', (req, res, next) => {
 
 // new collection
 router.post('/collections/new', (req, res, next) => {
-  const { title, description } = req.body;
+  const { collectionTitle, collectionDescription } = req.body;
+  console.log('title and description', req.body, req.session);
 
   Collection.create({
-    title: title,
-    description: description,
+    title: collectionTitle,
+    description: collectionDescription,
     creator: req.session.user._id,
   })
     .then((createdCollection) => {
@@ -202,6 +203,7 @@ router.get('/studios/:id', (req, res, next) => {
 // all tattoos
 router.get('/tattoos', (req, res, next) => {
   Tattoo.find()
+    .populate('artist')
     .then((tattoosFromDB) => {
       res.status(200).json(tattoosFromDB);
     })
@@ -256,14 +258,14 @@ router.get('/users', (req, res, next) => {
 
 // create new Studio
 router.post('/new-studio', async (req, res, next) => {
+  const { name, location, description, imageURL } = req.body;
   const geoData = await geocoder
     .forwardGeocode({
       query: req.body.location,
       limit: 1,
     })
     .send();
-  const { name, location, description, imageURL } = req.body;
-  console.log(geoData.body);
+  console.log('this is the body-ody-ody', geoData.body.features[0].geometry);
   // User.findById(req.params.id)
   // .then(studio => {
   Studio.create({
@@ -315,6 +317,7 @@ router.get('/:id/user-dashboard', (req, res, next) => {
 router.get('/:id/artist-profile', (req, res, next) => {
   Tattoo.find({ artist: req.params.id })
     .then((tattoos) => {
+      console.log(tattoos);
       res.status(200).json(tattoos);
     })
     .catch((err) => next(err));
